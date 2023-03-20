@@ -4,6 +4,9 @@ version = "0.0.0"
 description = "Public digiLab API"
 authors = ["FreddyWordingham <freddy@digilab.co.uk>"]
 readme = "README.md"
+packages = [
+    { include = "twinlab_client" },
+]
 
 [tool.poetry.dependencies]
 pandas = "^1.5.3"

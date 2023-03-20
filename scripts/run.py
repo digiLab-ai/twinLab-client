@@ -1,4 +1,4 @@
-import digilab as dl
+import twinlab_client as tl
 import pandas as pd
 
 # Load data
@@ -12,7 +12,7 @@ meta = {
     "estimator_type": "gaussian_process_regression",
     "train_test_split": 80
 }
-my_campaign = dl.Campaign(meta)
+my_campaign = tl.Campaign(meta)
 my_campaign.fit(data)
 
 # Sample

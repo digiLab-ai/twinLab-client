@@ -8,11 +8,12 @@ import requests
 from . import utils
 
 
-def upload_data(training_file: str, user_info: dict, server="cloud", verbose=False) -> None:
-
+def upload_data(
+    training_file: str, user_info: dict, server="cloud", verbose=False
+) -> None:
     # Request URL
     baseURL = utils.get_server_url(server)
-    url = baseURL+"/upload_data"
+    url = baseURL + "/upload_data"
 
     # Request files to be sent to the lambda, including file type
     files = {"file": (training_file, open(training_file, "rb"), "text/csv")}
@@ -26,11 +27,12 @@ def upload_data(training_file: str, user_info: dict, server="cloud", verbose=Fal
         utils.print_response(r)
 
 
-def new_campaign(params_file: str, user_info: dict, server="cloud", verbose=False) -> None:
-
+def new_campaign(
+    params_file: str, user_info: dict, server="cloud", verbose=False
+) -> None:
     # Request URL
     baseURL = utils.get_server_url(server)
-    url = baseURL+"/new_campaign"
+    url = baseURL + "/new_campaign"
 
     # Request JSON file to be sent to the lambda
     with open(params_file) as f:
@@ -45,11 +47,12 @@ def new_campaign(params_file: str, user_info: dict, server="cloud", verbose=Fals
         utils.print_response(r)
 
 
-def sample_emulator(test_file: str, user_info: dict, server="cloud", verbose=False) -> tuple:
-
+def sample_emulator(
+    test_file: str, user_info: dict, server="cloud", verbose=False
+) -> tuple:
     # Request URL
     baseURL = utils.get_server_url(server)
-    url = baseURL+"/sample_emulator"
+    url = baseURL + "/sample_emulator"
 
     # Request files to be sent to the lambda, including file type
     files = {"file": (test_file, open(test_file, "rb"), "text/csv")}
@@ -78,7 +81,7 @@ def delete_campaign(user_info: dict, server="cloud", verbose=False) -> None:
 
     # Request URL
     baseURL = utils.get_server_url(server)
-    url = baseURL+"/delete_campaign"
+    url = baseURL + "/delete_campaign"
 
     # Request headers
     headers = utils.construct_headers(user_info)
@@ -87,5 +90,6 @@ def delete_campaign(user_info: dict, server="cloud", verbose=False) -> None:
     r = requests.post(url, headers=headers)
     if verbose:
         utils.print_response(r)
+
 
 ### ###

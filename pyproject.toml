@@ -7,7 +7,7 @@ repository = "https://github.com/digiLab-ai/twinLab-cloud"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9 <3.10"
+python = ">=3.9,<3.10"
 pandas = "^1.5.3"
 requests = "^2.28.2"
 

@@ -1,21 +1,23 @@
 [tool.poetry]
 name = "client"
 version = "0.1.0"
-description = "AWS cloud functions for twinLab"
-authors = ["Alexander Mead <alexander@digilab.co.uk>"]
+description = "Client interface for twinLab"
+authors = ["Alexander Mead <alexander@digilab.co.uk>", "Freddy Wordingham <freddy@digilab.co.uk>"]
 repository = "https://github.com/digiLab-ai/twinLab-cloud"
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9 <3.10"
-boto3 = "^1.26.95"
 pandas = "^1.5.3"
-awslambdaric = "^2.0.4"
-#twinlab-utils = { path = "../utils", develop = true }
-twinlab = { path = "../twinLab", develop = true }
+requests = "^2.28.2"
 
 [tool.poetry.dev-dependencies]
+
 IPython = "^8.11"
+
+[tool.poetry.group.dev.dependencies]
+matplotlib = "^3.7.1"
+ipykernel = "^6.22.0"
 
 [build-system]
 requires = ["poetry-core"]

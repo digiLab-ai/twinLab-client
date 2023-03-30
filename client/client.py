@@ -1,6 +1,8 @@
 # Standard imports
-import requests
 import json
+
+# Third-party imports
+import requests
 
 # Project imports
 from . import utils

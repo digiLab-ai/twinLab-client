@@ -1,8 +1,8 @@
 # Standard imports
 import argparse
-import requests
 
 # Third-party imports
+import requests
 import pandas as pd
 
 # Parameters

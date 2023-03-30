@@ -5,18 +5,17 @@ import argparse
 import requests
 import pandas as pd
 
-# Parameters
-LOCAL_SERVER = "http://localhost:3000"
-CLOUD_SERVER = "https://y8oizvhfa9.execute-api.eu-west-1.amazonaws.com/Prod"
-
 
 def get_command_line_args() -> argparse.Namespace:
     """
     Parse command-line arguments
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("server", default=False,
-                        help="specify whether to use local or cloud lambda function")
+    parser.add_argument(
+        "server",
+        default=False,
+        help="specify whether to use local or cloud lambda function",
+    )
     args = parser.parse_args()
     return args
 
@@ -30,7 +29,7 @@ def get_server_url(server: str) -> str:
     elif server == "cloud":
         baseURL = CLOUD_SERVER
     else:
-        print('Server:', server)
+        print("Server:", server)
         raise ValueError("Server must be either 'local' or 'cloud'")
     return baseURL
 
@@ -40,7 +39,7 @@ def extract_csv_from_response(response: requests.Response, name: str) -> pd.Data
     Extract CSV from response
     """
     body = response.json()  # Get the body of the response as a dictionary
-    data = body[name]       # Get the entry corresponding to the field name
+    data = body[name]  # Get the entry corresponding to the field name
     df = pd.read_json(data, orient="split")
     return df
 

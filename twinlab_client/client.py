@@ -8,62 +8,49 @@ import requests
 from . import utils
 
 
-def upload_data(
-    training_file: str, user_info: dict, server="cloud", verbose=False
+def upload_dataset(
+    training_file: str, server="cloud", verbose=False
 ) -> None:
-    # Request URL
-    baseURL = utils.get_server_url(server)
-    url = baseURL + "/upload_data"
-
-    # Request files to be sent to the lambda, including file type
+    """
+    Upload dataset
+    """
+    url = utils.get_server_url(server) + "/upload_dataset"
     files = {"file": (training_file, open(training_file, "rb"), "text/csv")}
-
-    # Request headers
-    headers = utils.construct_headers(user_info)
-
-    # Send request and print response
+    headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary?
     r = requests.post(url, files=files, headers=headers)
     if verbose:
-        utils.print_response(r)
+        utils.print_response_text(r)
 
 
 def new_campaign(
-    params_file: str, user_info: dict, server="cloud", verbose=False
+    params_file: str, campaign: str, server="cloud", verbose=False
 ) -> None:
-    # Request URL
-    baseURL = utils.get_server_url(server)
-    url = baseURL + "/new_campaign"
-
-    # Request JSON file to be sent to the lambda
-    with open(params_file) as f:
+    """
+    New campaign
+    """
+    url = utils.get_server_url(server) + "/new_campaign"
+    with open(params_file) as f:  # Request JSON file to be sent to the lambda
         params = json.load(f)
-
-    # Request headers
-    headers = utils.construct_headers(user_info)
-
-    # Send request
+    headers = utils.STANDARD_HEADERS.copy()
+    headers["X-Campaign"] = campaign
     r = requests.post(url, json=params, headers=headers)
     if verbose:
-        utils.print_response(r)
+        utils.print_response_text(r)
 
 
 def sample_emulator(
-    test_file: str, user_info: dict, server="cloud", verbose=False
+    test_file: str, campaign: str, server="cloud", verbose=False
 ) -> tuple:
-    # Request URL
-    baseURL = utils.get_server_url(server)
-    url = baseURL + "/sample_emulator"
-
-    # Request files to be sent to the lambda, including file type
+    """
+    Sample emulator
+    """
+    url = utils.get_server_url(server) + "/sample_emulator"
     files = {"file": (test_file, open(test_file, "rb"), "text/csv")}
-
-    # Request headers
-    headers = utils.construct_headers(user_info)
-
-    # Send request and print response
+    headers = utils.STANDARD_HEADERS.copy()
+    headers["X-Campaign"] = campaign
     r = requests.post(url, files=files, headers=headers)
     if verbose:
-        utils.print_response(r)
+        utils.print_response_text(r)
 
     # Extract dataframes from response
     df_mean = utils.extract_csv_from_response(r, "y_mean")
@@ -74,19 +61,47 @@ def sample_emulator(
     return df_mean, df_std
 
 
-def delete_campaign(user_info: dict, server="cloud", verbose=False) -> None:
+def delete_campaign(campaign: str, server="cloud", verbose=False) -> None:
     """
     Delete campaign directory from S3
     """
-
-    # Request URL
-    baseURL = utils.get_server_url(server)
-    url = baseURL + "/delete_campaign"
-
-    # Request headers
-    headers = utils.construct_headers(user_info)
-
-    # Send request and print response
+    url = utils.get_server_url(server) + "/delete_campaign"
+    headers = utils.STANDARD_HEADERS.copy()
+    headers["X-Campaign"] = campaign
     r = requests.post(url, headers=headers)
     if verbose:
-        utils.print_response(r)
+        utils.print_response_text(r)
+
+
+def delete_dataset(dataset: str, server="cloud", verbose=False) -> None:
+    """
+    Delete campaign directory from S3
+    """
+    url = utils.get_server_url(server) + "/delete_dataset"
+    headers = utils.STANDARD_HEADERS.copy()
+    headers["X-Dataset"] = dataset
+    r = requests.post(url, headers=headers)
+    if verbose:
+        utils.print_response_text(r)
+
+
+def list_campaigns(server="cloud", verbose=False) -> list:
+    """
+    List campaigns in S3
+    """
+    url = utils.get_server_url(server) + "/list_campaigns"
+    headers = utils.STANDARD_HEADERS.copy()
+    r = requests.post(url, headers=headers)
+    if verbose:
+        utils.print_response_text(r)
+
+
+def list_datasets(server="cloud", verbose=False) -> list:
+    """
+    List datasets in S3
+    """
+    url = utils.get_server_url(server) + "/list_datasets"
+    headers = utils.STANDARD_HEADERS.copy()
+    r = requests.post(url, headers=headers)
+    if verbose:
+        utils.print_response_text(r)

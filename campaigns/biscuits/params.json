@@ -1,6 +1,6 @@
 {
     "estimator": "gaussian_process_regression",
-    "filename": "train.csv",
+    "filename": "biscuits.csv",
     "inputs": ["Pack price [£]", "Number of biscuits per pack"],
     "outputs": ["Number of packs sold", "Profit [£]"],
     "train_test_split": 10

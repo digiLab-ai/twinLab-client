@@ -1,5 +1,7 @@
 # Standard imports
 import argparse
+import json
+from pprint import pprint
 
 # Third-party imports
 import requests
@@ -7,6 +9,11 @@ import pandas as pd
 
 # Project imports
 from .settings import ENV
+
+STANDARD_HEADERS = {
+    "X-Group": ENV.GROUP_NAME,
+    "X-User": ENV.USER_NAME,
+}
 
 
 def get_command_line_args() -> argparse.Namespace:
@@ -47,21 +54,19 @@ def extract_csv_from_response(response: requests.Response, name: str) -> pd.Data
     return df
 
 
-def construct_headers(campaign_id: str) -> dict:
-    """
-    Construct headers for request
-    """
-
-    return {
-        "X-Group": ENV.GROUP_NAME,
-        "X-User": ENV.USER_NAME,
-        "X-Campaign": campaign_id,
-    }
-
-
-def print_response(r: requests.Response) -> None:
+def print_response_headers(r: requests.Response) -> None:
     """
     Print response
     """
-    print("Response headers:", r.headers, "\n")
-    print("Response text:", r.text, "\n")
+    print("Response headers:")
+    pprint(dict(r.headers))
+    print()
+
+
+def print_response_text(r: requests.Response) -> None:
+    """
+    Print response
+    """
+    print("Response text:")
+    pprint(json.loads(r.text))
+    print()

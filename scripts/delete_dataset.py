@@ -2,6 +2,6 @@
 import twinlab_client as tl
 
 print()  #  Initial white space
-campaign = "biscuits-python"
+dataset = "biscuits.csv"
 server = tl.get_command_line_args().server
-tl.delete_campaign(campaign, server, verbose=True)
+tl.delete_dataset(dataset, server, verbose=True)

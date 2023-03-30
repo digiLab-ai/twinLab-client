@@ -90,6 +90,3 @@ def delete_campaign(user_info: dict, server="cloud", verbose=False) -> None:
     r = requests.post(url, headers=headers)
     if verbose:
         utils.print_response(r)
-
-
-### ###

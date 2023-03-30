@@ -2,7 +2,7 @@
 import os
 
 # Project imports
-import client as tl
+import twinlab_client as tl
 
 
 # Inital white space
@@ -12,12 +12,8 @@ print()
 args = tl.get_command_line_args()
 server = args.server
 
-# User info
-user_info = {
-    "group": "digilab",
-    "user": os.environ.get("USER"),
-    "campaign": "biscuits-python",
-}
+# Campaign ID
+campaign_id = "biscuits-python"
 
 # Send request and print response
-tl.delete_campaign(user_info, server, verbose=True)
+tl.delete_campaign(campaign_id, server, verbose=True)

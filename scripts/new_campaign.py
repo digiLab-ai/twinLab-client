@@ -2,7 +2,7 @@
 import os
 
 # Project imports
-import client as tl
+import twinlab_client as tl
 
 
 # Inital white space
@@ -15,12 +15,8 @@ server = args.server
 # Campaign parameters
 params = "campaigns/biscuits/params.json"
 
-# User info
-user_info = {
-    "group": "digilab",
-    "user": os.environ.get("USER"),
-    "campaign": "biscuits-python",
-}
+# Campaign ID
+campaign_id = "biscuits-python"
 
 # Send request and print response
-tl.new_campaign(params, user_info, server, verbose=True)
+tl.new_campaign(params, campaign_id, server, verbose=True)

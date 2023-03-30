@@ -47,23 +47,16 @@ def extract_csv_from_response(response: requests.Response, name: str) -> pd.Data
     return df
 
 
-def construct_headers(user_info: dict) -> dict:
+def construct_headers(campaign_id: str) -> dict:
     """
     Construct headers for request
     """
 
-    default_info = {
-        "group": ENV.GROUP_NAME,
-        "user": ENV.USER_NAME,
+    return {
+        "X-Group": ENV.GROUP_NAME,
+        "X-User": ENV.USER_NAME,
+        "X-Campaign": campaign_id,
     }
-    default_info.update(user_info)
-
-    headers = {
-        "X-Group": default_info["group"],
-        "X-User": default_info["user"],
-        "X-Campaign": default_info["campaign"],
-    }
-    return headers
 
 
 def print_response(r: requests.Response) -> None:

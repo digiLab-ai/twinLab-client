@@ -2,7 +2,7 @@
 import os
 
 # Project imports
-import client as tl
+import twinlab_client as tl
 
 
 # Inital white space
@@ -15,12 +15,8 @@ server = args.server
 # Test data
 file = "campaigns/biscuits/eval.csv"
 
-# User info
-user_info = {
-    "group": "digilab",
-    "user": os.environ.get("USER"),
-    "campaign": "biscuits-python",
-}
+# Campaign ID
+campaign_id = "biscuits-python"
 
 # Send request and print response
-df_mean, df_std = tl.sample_emulator(file, user_info, server, verbose=True)
+df_mean, df_std = tl.sample_emulator(file, campaign_id, server, verbose=True)

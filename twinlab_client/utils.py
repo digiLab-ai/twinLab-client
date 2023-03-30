@@ -5,6 +5,9 @@ import argparse
 import requests
 import pandas as pd
 
+# Local imports
+from .settings import ENV
+
 
 def get_command_line_args() -> argparse.Namespace:
     """

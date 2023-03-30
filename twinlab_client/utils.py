@@ -52,17 +52,16 @@ def construct_headers(user_info: dict) -> dict:
     Construct headers for request
     """
 
-    user_info = user_info.update(
-        {
-            "group": ENV.GROUP_NAME,
-            "user": ENV.USER_NAME,
-        }
-    )
+    default_info = {
+        "group": ENV.GROUP_NAME,
+        "user": ENV.USER_NAME,
+    }
+    default_info.update(user_info)
 
     headers = {
-        "X-Group": user_info["group"],
-        "X-User": user_info["user"],
-        "X-Campaign": user_info["campaign"],
+        "X-Group": default_info["group"],
+        "X-User": default_info["user"],
+        "X-Campaign": default_info["campaign"],
     }
     return headers
 

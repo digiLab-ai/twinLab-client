@@ -5,7 +5,7 @@ import argparse
 import requests
 import pandas as pd
 
-# Local imports
+# Project imports
 from .settings import ENV
 
 
@@ -28,9 +28,9 @@ def get_server_url(server: str) -> str:
     The URL is the dockerised lambda function that's been set up in cloud by alexander
     """
     if server == "local":
-        baseURL = LOCAL_SERVER
+        baseURL = ENV.LOCAL_SERVER
     elif server == "cloud":
-        baseURL = CLOUD_SERVER
+        baseURL = ENV.CLOUD_SERVER
     else:
         print("Server:", server)
         raise ValueError("Server must be either 'local' or 'cloud'")

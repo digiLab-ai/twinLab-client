@@ -23,14 +23,12 @@ def upload_dataset(
 
 
 def new_campaign(
-    params_file: str, campaign: str, server="cloud", verbose=False
+    params: dict, campaign: str, server="cloud", verbose=False
 ) -> None:
     """
     New campaign
     """
     url = utils.get_server_url(server) + "/new_campaign"
-    with open(params_file) as f:  # Request JSON file to be sent to the lambda
-        params = json.load(f)
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
     r = requests.post(url, json=params, headers=headers)

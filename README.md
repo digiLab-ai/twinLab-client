@@ -3,25 +3,24 @@
 Headless interface to the `twinLab` library.
 
 ## Installation
-
 ```bash
 poetry install
 ```
 
+## Environment setup
+```bash
+cp .env.example .env
+```
+and fill in your group and user names.
+
 ## Commands
 
-Local test:
-```bash
-poetry run python scripts/trigger.py local
+Local or cloud testing:
+```python
+poetry run python scripts/trigger.py local_or_cloud
 ```
-where `trigger.py` can be replaced with any of the scripts in the `script` directory.
+where the `local_or_cloud` flag is either `local` or `cloud` and where `trigger.py` can be replaced with any of the scripts in the `script` directory.
 You need to have a local server for the `twinlab-cloud` repository running for local testing.
-
-Cloud test:
-```bash
-poetry run python scripts/trigger.py cloud
-```
-where `trigger.py` can be replaced with any of the scripts in the `script` directory.
 
 ## Notebooks
 

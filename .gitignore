@@ -20,6 +20,9 @@ scrap.ipynb
 # Pickles
 *.pkl
 
+# UK AEA
+B1/
+
 # Poetry
 poetry.lock
 

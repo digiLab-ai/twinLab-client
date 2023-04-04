@@ -1,5 +1,6 @@
 # Utility functions
 from .utils import get_command_line_args
+from .utils import NSIGS
 
 # API functions
 from .client import upload_dataset

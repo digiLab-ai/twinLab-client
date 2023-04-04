@@ -1,0 +1,22 @@
+# Third-party imports
+import numpy as np
+import pandas as pd
+
+# Parameters
+n = 10
+seed = 123
+
+# Seed random number generator
+np.random.seed(seed)
+
+# Generate data for evaluation
+E1 = np.random.normal(0.81, 0.01, n)
+E2 = np.random.normal(0.95, 0.01, n)
+E3 = np.random.normal(1.45, 0.03, n)
+n1 = np.random.normal(0.001, 0.0001, n)
+n2 = np.random.normal(0.0008, 0.0001, n)
+df = pd.DataFrame(np.column_stack((E1, E2, E3, n1, n2)),
+                  columns=["E1", "E2", "E3", "n1", "n2"])
+
+# Save data to CSV file
+df.to_csv("gen.csv", index=False)

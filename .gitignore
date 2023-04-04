@@ -17,8 +17,8 @@ __pycache__/
 # Rough working
 scrap.ipynb
 
-# Pickles
-*.pkl
+# UK AEA
+datasets/ukaea.csv
 
 # Poetry
 poetry.lock

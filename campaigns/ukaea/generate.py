@@ -10,6 +10,9 @@ seed = 123
 np.random.seed(seed)
 
 # Generate data for evaluation
+# This creates samples from the posterior given some external dataset
+# The posterior is assumed to be a independent normal distributions
+# Covariance ignored for simplicity
 E1 = np.random.normal(0.81, 0.01, n)
 E2 = np.random.normal(0.95, 0.01, n)
 E3 = np.random.normal(1.45, 0.03, n)

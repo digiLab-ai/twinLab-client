@@ -22,4 +22,6 @@ df = pd.DataFrame(np.column_stack((E1, E2, E3, n1, n2)),
                   columns=["E1", "E2", "E3", "n1", "n2"])
 
 # Save data to CSV file
-df.to_csv("gen.csv", index=False)
+campaign_dir = "campaigns/ukaea"
+file = campaign_dir+"/gen.csv"
+df.to_csv(file, index=False)

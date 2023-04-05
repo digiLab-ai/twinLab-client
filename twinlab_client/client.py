@@ -25,6 +25,7 @@ def train_campaign(
 ) -> None:
     """
     Train campaign
+    TODO: Set default train_test_split?
     """
     url = utils.get_server_url(server) + "/train_campaign"
     headers = utils.STANDARD_HEADERS.copy()

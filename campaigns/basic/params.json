@@ -1,5 +1,4 @@
 {
-    "estimator": "gaussian_process_regression",
     "filename": "basic.csv",
     "inputs": ["x"],
     "outputs": ["y"],

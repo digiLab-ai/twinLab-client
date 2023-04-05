@@ -2,7 +2,7 @@
 import twinlab_client as tl
 
 print()  #  Initial white space
-params = "campaigns/biscuits/params.json"
+file = "campaigns/biscuits/eval.csv"
 campaign = "biscuits"
 server = tl.get_command_line_args().server
-tl.new_campaign(params, campaign, server, verbose=True)
+df_mean, df_std = tl.sample_campaign(file, campaign, server, verbose=True)

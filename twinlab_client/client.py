@@ -1,6 +1,3 @@
-# Standard imports
-import json
-
 # Third-party imports
 import requests
 
@@ -23,13 +20,13 @@ def upload_dataset(
         utils.print_response_text(r)
 
 
-def new_campaign(
+def train_campaign(
     params: dict, campaign: str, server="cloud", verbose=False
 ) -> None:
     """
-    New campaign
+    Train campaign
     """
-    url = utils.get_server_url(server) + "/new_campaign"
+    url = utils.get_server_url(server) + "/train_campaign"
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
     r = requests.post(url, json=params, headers=headers)
@@ -38,13 +35,13 @@ def new_campaign(
         utils.print_response_text(r)
 
 
-def sample_emulator(
+def sample_campaign(
     test_file: str, campaign: str, server="cloud", verbose=False
 ) -> tuple:
     """
-    Sample emulator
+    Sample campaign
     """
-    url = utils.get_server_url(server) + "/sample_emulator"
+    url = utils.get_server_url(server) + "/sample_campaign"
     files = {"file": (test_file, open(test_file, "rb"), "text/csv")}
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
@@ -94,7 +91,7 @@ def list_campaigns(server="cloud", verbose=False) -> list:
     """
     url = utils.get_server_url(server) + "/list_campaigns"
     headers = utils.STANDARD_HEADERS.copy()
-    r = requests.post(url, headers=headers)
+    r = requests.get(url, headers=headers)
     utils.check_response(r)
     if verbose:
         utils.print_response_text(r)
@@ -106,7 +103,7 @@ def list_datasets(server="cloud", verbose=False) -> list:
     """
     url = utils.get_server_url(server) + "/list_datasets"
     headers = utils.STANDARD_HEADERS.copy()
-    r = requests.post(url, headers=headers)
+    r = requests.get(url, headers=headers)
     utils.check_response(r)
     if verbose:
         utils.print_response_text(r)

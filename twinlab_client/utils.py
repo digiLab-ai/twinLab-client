@@ -94,3 +94,10 @@ def print_response_text(r: requests.Response) -> None:
     print("Response text:")
     pprint(json.loads(r.text))
     print()
+
+
+def check_response(r: requests.Response) -> None:
+    if r.status_code != 200:
+        print("Status code:", r.status_code)
+        print_response_text(r)
+        raise RuntimeError("Response error")

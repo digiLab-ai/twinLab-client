@@ -18,6 +18,7 @@ def upload_dataset(
     files = {"file": (training_file, open(training_file, "rb"), "text/csv")}
     headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary?
     r = requests.post(url, files=files, headers=headers)
+    utils.check_response(r)
     if verbose:
         utils.print_response_text(r)
 
@@ -32,6 +33,7 @@ def new_campaign(
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
     r = requests.post(url, json=params, headers=headers)
+    utils.check_response(r)
     if verbose:
         utils.print_response_text(r)
 
@@ -47,6 +49,7 @@ def sample_emulator(
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
     r = requests.post(url, files=files, headers=headers)
+    utils.check_response(r)
     if verbose:
         utils.print_response_text(r)
 
@@ -67,6 +70,7 @@ def delete_campaign(campaign: str, server="cloud", verbose=False) -> None:
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
     r = requests.post(url, headers=headers)
+    utils.check_response(r)
     if verbose:
         utils.print_response_text(r)
 
@@ -79,6 +83,7 @@ def delete_dataset(dataset: str, server="cloud", verbose=False) -> None:
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Dataset"] = dataset
     r = requests.post(url, headers=headers)
+    utils.check_response(r)
     if verbose:
         utils.print_response_text(r)
 
@@ -90,6 +95,7 @@ def list_campaigns(server="cloud", verbose=False) -> list:
     url = utils.get_server_url(server) + "/list_campaigns"
     headers = utils.STANDARD_HEADERS.copy()
     r = requests.post(url, headers=headers)
+    utils.check_response(r)
     if verbose:
         utils.print_response_text(r)
 
@@ -101,5 +107,6 @@ def list_datasets(server="cloud", verbose=False) -> list:
     url = utils.get_server_url(server) + "/list_datasets"
     headers = utils.STANDARD_HEADERS.copy()
     r = requests.post(url, headers=headers)
+    utils.check_response(r)
     if verbose:
         utils.print_response_text(r)

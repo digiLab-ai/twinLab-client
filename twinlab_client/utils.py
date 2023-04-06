@@ -93,20 +93,26 @@ def print_response_headers(r: requests.Response) -> None:
     print()
 
 
-def print_response_text(r: requests.Response) -> None:
+# def print_response_text(r: requests.Response) -> None:
+#     """
+#     Print response message
+#     """
+#     print("Response:")
+#     for key, value in json.loads(r.text).items():
+#         print(f"{key}: {value}")
+#     print()
+def print_response_message(r: requests.Response) -> None:
     """
     Print response message
     """
-    print("Response:")
-    for key, value in json.loads(r.text).items():
-        print(f"{key}: {value}")
+    print("Response:", json.loads(r.text)["message"])
     print()
 
 
 def check_response(r: requests.Response) -> None:
     if r.status_code != 200:
         print("Status code:", r.status_code)
-        print_response_text(r)
+        print_response_message(r)
         raise RuntimeError("Response error")\
 
 ### ###

@@ -86,7 +86,7 @@ def extract_csv_from_response(response: requests.Response, name: str) -> pd.Data
 
 def print_response_headers(r: requests.Response) -> None:
     """
-    Print response
+    Print response headers
     """
     print("Response headers:")
     pprint(dict(r.headers))
@@ -95,10 +95,11 @@ def print_response_headers(r: requests.Response) -> None:
 
 def print_response_text(r: requests.Response) -> None:
     """
-    Print response
+    Print response message
     """
-    print("Response text:")
-    pprint(json.loads(r.text))
+    print("Response:")
+    for key, value in json.loads(r.text).items():
+        print(f"{key}: {value}")
     print()
 
 

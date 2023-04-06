@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - iss2-freddy-add_docs
 
 jobs:
   deploy:

@@ -23,10 +23,11 @@ def get_boundaries(n: int) -> np.ndarray:
     """
     Get boundaries for making a nice probability distribution of a Gaussian
     """
-    fmin, fmax = 1./(2.*(n+1.)), 1.-1./(2.*(n+1.))
+    frac = 1./(2.*(n+1.))
+    fmin, fmax = frac, 1.-frac
     f = np.linspace(fmin, fmax, n)
-    dx = -np.sqrt(2.)*np.log(f)
-    return dx
+    dy = -np.sqrt(2.)*np.log(f)
+    return dy
 
 
 def get_alpha(n: int, alpha_mid=0.99) -> float:

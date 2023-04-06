@@ -6,6 +6,8 @@ sidebar_position: 6
 
 Sample an existing campaign.
 
+**NOTE:** Your user information is automatically added to the request using the `.env` file.
+
 ## Arguments
 
 | Name       | Type   | Description               |

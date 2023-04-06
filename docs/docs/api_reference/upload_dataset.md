@@ -6,6 +6,8 @@ sidebar_position: 1
 
 Upload a CSV file to create a new dataset.
 
+**NOTE:** Your user information is automatically added to the request using the `.env` file.
+
 ## Arguments
 
 | Name   | Type   | Description  |

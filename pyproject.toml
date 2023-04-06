@@ -2,7 +2,7 @@
 name = "twinlab-client"
 version = "0.0.0"
 description = "Client interface for twinLab"
-authors = ["Alexander Mead <alexander@digilab.co.uk>", "Freddy Wordingham <freddy@digilab.co.uk>"]
+authors = ["Alexander Mead <alexander@digilab.co.uk>", "Freddy Wordingham <freddy@digilab.co.uk>", "Michelle Bieger <michelle@digilab.co.uk>"]
 repository = "https://github.com/digiLab-ai/twinLab-cloud"
 readme = "README.md"
 

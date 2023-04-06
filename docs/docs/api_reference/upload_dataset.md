@@ -19,6 +19,6 @@ Upload a CSV file to create a new dataset.
 ```python
 import twinlab_client as tl
 
-file = "resources/data/my_data.csv"
-tl.upload_dataset(file)
+data_file = "resources/data/my_data.csv"
+tl.upload_dataset(data_file)
 ```

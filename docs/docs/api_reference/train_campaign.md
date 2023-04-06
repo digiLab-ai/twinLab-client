@@ -6,45 +6,26 @@ sidebar_position: 4
 
 Train a new emulator.
 
-## Endpoint URL
+**NOTE:** Your user information is automatically added to the request using the `.env` file.
 
-`https://api.twinlab.ai/twinlab/train_campaign`
+## Arguments
 
-## Headers
+| Name       | Type   | Description            |
+| ---------- | ------ | ---------------------- |
+| `params`   | dict   | Emulator configuration |
+| `campaign` | string | Campaign label         |
 
-| Name         | Type   | Description                  |
-| ------------ | ------ | ---------------------------- |
-| `X-Group`    | string | Organisation user belongs to |
-| `X-User`     | string | Unique user name             |
-| `X-Campaign` | string | Unique name of the campaign  |
-
-## Parameters data
-
-Parameters must be a JSON file.
-
-## Response fields
-
-| Name      | Type   | Description          |
-| --------- | ------ | -------------------- |
-| `message` | string | Confirmation message |
+**NOTE:** Data must be a CSV file.
 
 ## Example
 
-### Query
+```python
+import json
+import twinlab_client as tl
 
-```shell
-curl -i -X POST https://api.twinlab.ai/twinlab/delete_dataset \
-    -H "X-Group: digilab" \
-    -H "X-User: dodders" \
-    -H "X-Campaign: my_campaign" \
-    -d @resources/data/my_params.json
-```
-
-### Response
-
-```bash
-{
-    "status": 200,
-    "message": "Training complete"
-}
+params_file = "resources/data/my_params.json"
+with open(params_file, "r") as f:
+    params = json.load(f)
+campaign = "my_campaign"
+tl.train_campaign(params, campaign)
 ```

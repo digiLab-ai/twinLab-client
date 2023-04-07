@@ -1,3 +1,6 @@
+# Standard imports
+from pprint import pprint
+
 # Third-party imports
 import requests
 import pandas as pd
@@ -35,7 +38,7 @@ def query_dataset(
     df = utils.extract_csv_from_response(r, "summary")
     if verbose:
         utils.print_response_message(r)
-        print("Summary:", df, "\n")
+        print("Summary:\n", df, "\n")
     return df
 
 
@@ -91,12 +94,12 @@ def query_campaign(
     headers["X-Campaign"] = campaign
     r = requests.get(url, headers=headers)
     utils.check_response(r)
-    # TODO: Do something with the response
-    # df = utils.extract_csv_from_response(r, "summary")
+    metadata = utils.extract_item_from_response(r, "metadata")
     if verbose:
         utils.print_response_message(r)
-        # print("Summary:", df, "\n")
-    # return df
+        print("Metadata:")
+        pprint(metadata)
+    return metadata
 
 
 def list_campaigns(server="cloud", verbose=False) -> list:

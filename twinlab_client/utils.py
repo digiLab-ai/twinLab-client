@@ -84,6 +84,15 @@ def extract_csv_from_response(response: requests.Response, name: str) -> pd.Data
     return df
 
 
+def extract_item_from_response(response: requests.Response, name: str) -> pd.DataFrame:
+    """
+    Extract CSV from response
+    """
+    body = response.json()  # Get the body of the response as a dictionary
+    item = body[name]  # Get the entry corresponding to the field name
+    return item
+
+
 def print_response_headers(r: requests.Response) -> None:
     """
     Print response headers

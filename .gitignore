@@ -138,6 +138,9 @@ template.yaml
 # macOS
 .DS_Store/
 
+# Rough working
+notebooks/scrap.ipynb
+
 # UK AEA
 datasets/ukaea.csv
 

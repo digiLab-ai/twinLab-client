@@ -2,8 +2,13 @@
 name = "twinlab"
 version = "0.0.0"
 description = "Client interface for twinLab"
+<<<<<<< HEAD
 authors = ["Alexander Mead <alexander@digilab.co.uk>", "Freddy Wordingham <freddy@digilab.co.uk>"]
 repository = "https://github.com/digiLab-ai/twinLab-client"
+=======
+authors = ["Alexander Mead <alexander@digilab.co.uk>", "Freddy Wordingham <freddy@digilab.co.uk>", "Michelle Bieger <michelle@digilab.co.uk>"]
+repository = "https://github.com/digiLab-ai/twinLab-cloud"
+>>>>>>> c073a4531ad20efeb2770bc6771bdb8d16cadac1
 readme = "README.md"
 
 [tool.poetry.dependencies]

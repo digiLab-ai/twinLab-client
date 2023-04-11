@@ -5,6 +5,7 @@ from pprint import pprint
 
 # Third-party imports
 import requests
+import numpy as np
 import pandas as pd
 
 # Project imports
@@ -15,29 +16,30 @@ STANDARD_HEADERS = {
     "X-User": ENV.USER_NAME,
 }
 
-# Number of sigmas corresponding to Gaussian probability mass
-# in 0.05 intervals from 0.05 to 0.95
-NSIGS = [
-    0.06270677794321385,
-    0.12566134685507416,
-    0.18911842627279238,
-    0.2533471031357997,
-    0.31863936396437514,
-    0.38532046640756773,
-    0.45376219016987956,
-    0.5244005127080407,
-    0.5977601260424784,
-    0.6744897501960817,
-    0.7554150263604693,
-    0.8416212335729143,
-    0.9345892910734803,
-    1.0364333894937898,
-    1.1503493803760079,
-    1.2815515655446004,
-    1.4395314709384563,
-    1.6448536269514733,
-    1.959963984540056,
-]
+### Plotting ###
+
+
+def get_boundaries(n: int) -> np.ndarray:
+    """
+    Get boundaries for making a nice probability distribution of a Gaussian
+    """
+    frac = 1./(2.*(n+1.))
+    fmin, fmax = frac, 1.-frac
+    f = np.linspace(fmin, fmax, n)
+    dy = -np.sqrt(2.)*np.log(f)
+    return dy
+
+
+def get_alpha(n: int, alpha_mid=0.99) -> float:
+    """
+    Get a sensible alpha value for a given number of samples
+    """
+    alpha = 1.-(1.-alpha_mid)**(1/n)
+    return alpha
+
+###  ###
+
+### Utility functions ###
 
 
 def get_command_line_args() -> argparse.Namespace:
@@ -67,6 +69,10 @@ def get_server_url(server: str) -> str:
         raise ValueError("Server must be either 'local' or 'cloud'")
     return baseURL
 
+### ###
+
+### HTTP requests ###
+
 
 def extract_csv_from_response(response: requests.Response, name: str) -> pd.DataFrame:
     """
@@ -78,26 +84,44 @@ def extract_csv_from_response(response: requests.Response, name: str) -> pd.Data
     return df
 
 
+def extract_item_from_response(response: requests.Response, name: str) -> pd.DataFrame:
+    """
+    Extract CSV from response
+    """
+    body = response.json()  # Get the body of the response as a dictionary
+    item = body[name]  # Get the entry corresponding to the field name
+    return item
+
+
 def print_response_headers(r: requests.Response) -> None:
     """
-    Print response
+    Print response headers
     """
     print("Response headers:")
     pprint(dict(r.headers))
     print()
 
 
-def print_response_text(r: requests.Response) -> None:
+# def print_response_text(r: requests.Response) -> None:
+#     """
+#     Print response message
+#     """
+#     print("Response:")
+#     for key, value in json.loads(r.text).items():
+#         print(f"{key}: {value}")
+#     print()
+def print_response_message(r: requests.Response) -> None:
     """
-    Print response
+    Print response message
     """
-    print("Response text:")
-    pprint(json.loads(r.text))
+    print("Response:", json.loads(r.text)["message"])
     print()
 
 
 def check_response(r: requests.Response) -> None:
     if r.status_code != 200:
         print("Status code:", r.status_code)
-        print_response_text(r)
-        raise RuntimeError("Response error")
+        print_response_message(r)
+        raise RuntimeError("Response error")\
+
+### ###

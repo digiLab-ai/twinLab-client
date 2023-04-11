@@ -22,9 +22,7 @@ def upload_dataset(training_file: str, server="cloud", verbose=False) -> None:
         utils.print_response_message(r)
 
 
-def query_dataset(
-    dataset: str, server="cloud", verbose=False
-) -> pd.DataFrame:
+def query_dataset(dataset: str, server="cloud", verbose=False) -> pd.DataFrame:
     """
     Query dataset
     """
@@ -79,9 +77,7 @@ def train_campaign(params: dict, campaign: str, server="cloud", verbose=False) -
         utils.print_response_message(r)
 
 
-def query_campaign(
-    campaign: str, server="cloud", verbose=False
-) -> pd.DataFrame:
+def query_campaign(campaign: str, server="cloud", verbose=False) -> pd.DataFrame:
     """
     Query campaign
     """
@@ -141,7 +137,6 @@ def delete_campaign(campaign: str, server="cloud", verbose=False) -> None:
     r = requests.post(url, headers=headers)
     utils.check_response(r)
     if verbose:
-<<<<<<< HEAD:twinlab/client.py
         utils.print_response_text(r)
 
 
@@ -185,6 +180,3 @@ def list_datasets(server="cloud", verbose=False) -> list:
         utils.print_response_text(r)
     response = r.json()
     return response["datasets"]
-=======
-        utils.print_response_message(r)
->>>>>>> c073a4531ad20efeb2770bc6771bdb8d16cadac1:twinlab_client/client.py

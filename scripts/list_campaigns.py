@@ -1,6 +1,7 @@
 # Project imports
-import twinlab_client as tl
+import twinlab as tl
 
 print()  #  Initial white space
 server = tl.get_command_line_args().server
-tl.list_campaigns(server, verbose=True)
+campaigns = tl.list_campaigns(server, verbose=True)
+print(campaigns)

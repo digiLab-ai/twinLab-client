@@ -8,6 +8,8 @@ import pandas as pd
 # Project imports
 from . import utils
 
+### Dataset functions ###
+
 
 def upload_dataset(training_file: str, server="cloud", verbose=False) -> None:
     """
@@ -48,6 +50,8 @@ def list_datasets(server="cloud", verbose=False) -> list:
     utils.check_response(r)
     if verbose:
         utils.print_response_message(r)
+    response = r.json()
+    return response["datasets"]
 
 
 def delete_dataset(dataset: str, server="cloud", verbose=False) -> None:
@@ -61,6 +65,10 @@ def delete_dataset(dataset: str, server="cloud", verbose=False) -> None:
     utils.check_response(r)
     if verbose:
         utils.print_response_message(r)
+
+###  ###
+
+### Campaign functions ###
 
 
 def train_campaign(params: dict, campaign: str, server="cloud", verbose=False) -> None:
@@ -104,6 +112,8 @@ def list_campaigns(server="cloud", verbose=False) -> list:
     utils.check_response(r)
     if verbose:
         utils.print_response_message(r)
+    response = r.json()
+    return response["campaign_ids"]
 
 
 def sample_campaign(
@@ -137,46 +147,4 @@ def delete_campaign(campaign: str, server="cloud", verbose=False) -> None:
     r = requests.post(url, headers=headers)
     utils.check_response(r)
     if verbose:
-        utils.print_response_text(r)
-
-
-def delete_dataset(dataset: str, server="cloud", verbose=False) -> None:
-    """
-    Delete campaign directory from S3
-    """
-    url = utils.get_server_url(server) + "/delete_dataset"
-    headers = utils.STANDARD_HEADERS.copy()
-    headers["X-Dataset"] = dataset
-    r = requests.post(url, headers=headers)
-    utils.check_response(r)
-    if verbose:
-        utils.print_response_text(r)
-
-
-def list_campaigns(server="cloud", verbose=False) -> list:
-    """
-    List campaigns in S3
-    """
-    url = utils.get_server_url(server) + "/list_campaigns"
-    headers = utils.STANDARD_HEADERS.copy()
-    r = requests.get(url, headers=headers)
-    utils.check_response(r)
-    if verbose:
-        utils.print_response_text(r)
-
-    response = r.json()
-    return response["campaign_ids"]
-
-
-def list_datasets(server="cloud", verbose=False) -> list:
-    """
-    List datasets in S3
-    """
-    url = utils.get_server_url(server) + "/list_datasets"
-    headers = utils.STANDARD_HEADERS.copy()
-    r = requests.get(url, headers=headers)
-    utils.check_response(r)
-    if verbose:
-        utils.print_response_text(r)
-    response = r.json()
-    return response["datasets"]
+        utils.print_response_message(r)

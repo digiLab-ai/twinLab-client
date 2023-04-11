@@ -1,8 +1,9 @@
 # Standard imports
 import json
+from pprint import pprint
 
 # Project imports
-import twinlab_client as tl
+import twinlab as tl
 
 # Parameters
 dataset_dir = "datasets"
@@ -21,12 +22,20 @@ print()  #  Initial white space
 server = tl.get_command_line_args().server
 tl.upload_dataset(training_file, server, verbose=True)
 tl.query_dataset(dataset, server, verbose=True)
-tl.list_datasets(server, verbose=True)
+datasets = tl.list_datasets(server, verbose=True)
+pprint(datasets)
+print()
 tl.train_campaign(params, campaign, server, verbose=True)
 tl.query_campaign(campaign, server, verbose=True)
-tl.list_campaigns(server, verbose=True)
+campaigns = tl.list_campaigns(server, verbose=True)
+pprint(campaigns)
+print()
 tl.sample_campaign(eval_file, campaign, server, verbose=True)
 tl.delete_campaign(campaign, server, verbose=True)
-tl.list_campaigns(server, verbose=True)
+campaigns = tl.list_campaigns(server, verbose=True)
+pprint(campaigns)
+print()
 tl.delete_dataset(dataset, server, verbose=True)
-tl.list_datasets(server, verbose=True)
+datasets = tl.list_datasets(server, verbose=True)
+pprint(datasets)
+print()

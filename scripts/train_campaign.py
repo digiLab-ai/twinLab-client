@@ -2,7 +2,7 @@
 import json
 
 # Project imports
-import twinlab_client as tl
+import twinlab as tl
 
 print()  #  Initial white space
 params_file = "campaigns/biscuits/params.json"

@@ -1,5 +1,5 @@
 # Project imports
-import twinlab_client as tl
+import twinlab as tl
 
 print()  #  Initial white space
 dataset = "biscuits.csv"

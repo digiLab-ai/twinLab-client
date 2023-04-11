@@ -5,9 +5,7 @@ import requests
 from . import utils
 
 
-def upload_dataset(
-    training_file: str, server="cloud", verbose=False
-) -> None:
+def upload_dataset(training_file: str, server="cloud", verbose=False) -> None:
     """
     Upload dataset
     """
@@ -20,9 +18,7 @@ def upload_dataset(
         utils.print_response_text(r)
 
 
-def train_campaign(
-    params: dict, campaign: str, server="cloud", verbose=False
-) -> None:
+def train_campaign(params: dict, campaign: str, server="cloud", verbose=False) -> None:
     """
     Train campaign
     """
@@ -96,6 +92,9 @@ def list_campaigns(server="cloud", verbose=False) -> list:
     if verbose:
         utils.print_response_text(r)
 
+    response = r.json()
+    return response["campaign_ids"]
+
 
 def list_datasets(server="cloud", verbose=False) -> list:
     """
@@ -107,3 +106,5 @@ def list_datasets(server="cloud", verbose=False) -> list:
     utils.check_response(r)
     if verbose:
         utils.print_response_text(r)
+    response = r.json()
+    return response["datasets"]

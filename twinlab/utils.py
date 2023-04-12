@@ -19,7 +19,7 @@ STANDARD_HEADERS = {
 ### Plotting ###
 
 
-def get_boundaries(n: int) -> np.ndarray:
+def get_blur_boundaries(n: int) -> np.ndarray:
     """
     Get boundaries for making a nice probability distribution of a Gaussian
     """
@@ -30,7 +30,7 @@ def get_boundaries(n: int) -> np.ndarray:
     return dy
 
 
-def get_alpha(n: int, alpha_mid=0.99) -> float:
+def get_blur_alpha(n: int, alpha_mid=0.99) -> float:
     """
     Get a sensible alpha value for a given number of samples
     """
@@ -40,6 +40,24 @@ def get_alpha(n: int, alpha_mid=0.99) -> float:
 ###  ###
 
 ### Utility functions ###
+
+
+# def unwrap_payload(event: dict) -> dict:
+#     """
+#     Return payload and decode if it is base64 encoded
+#     TODO: Not used yet...
+#     """
+#     if "body" not in event:  # Get body
+#         raise Exception("No body in request")
+#     body = event["body"]
+#     if "isBase64Encoded" in event:  # Decode
+#         if event["isBase64Encoded"]:
+#             body = base64.b64decode(body)
+#     try:  # Parse
+#         payload = json.loads(body)
+#     except:
+#         raise Exception("Could not parse body as JSON")
+#     return payload
 
 
 def get_command_line_args() -> argparse.Namespace:
@@ -72,6 +90,28 @@ def get_server_url(server: str) -> str:
 ### ###
 
 ### HTTP requests ###
+
+
+def upload_file_to_presigned_url(file_path, presigned_url, verbose=False):
+    """
+    Upload a file to the specified pre-signed URL.
+
+    :param file_path: The path to the file you want to upload.
+    :param presigned_url: The pre-signed URL generated for uploading the file.
+    :return: True if the upload is successful, False otherwise.
+    """
+
+    with open(file_path, "rb") as file:
+        headers = {"Content-Type": "application/octet-stream"}
+        response = requests.put(presigned_url, data=file, headers=headers)
+    if verbose:
+        if response.status_code == 200:
+            print(f"File {file_path} uploaded successfully.")
+        else:
+            print(f"File upload failed")
+            print(f"Status code: {response.status_code}")
+            print(f"Reason: {response.text}")
+        print()
 
 
 def extract_csv_from_response(response: requests.Response, name: str) -> pd.DataFrame:

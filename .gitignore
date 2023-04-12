@@ -141,8 +141,9 @@ template.yaml
 # Rough working
 notebooks/scrap.ipynb
 
-# UK AEA
+# Datasets
 datasets/ukaea.csv
+datasets/biggest.csv
 
 # Poetry
 poetry.lock

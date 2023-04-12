@@ -14,6 +14,7 @@ from . import utils
 def upload_dataset(training_file: str, server="cloud", verbose=False) -> None:
     """
     Upload dataset
+    TODO: Retire in favour of upload_big_dataset?
     """
     url = utils.get_server_url(server) + "/upload_dataset"
     files = {"file": (training_file, open(training_file, "rb"), "text/csv")}
@@ -22,6 +23,23 @@ def upload_dataset(training_file: str, server="cloud", verbose=False) -> None:
     utils.check_response(r)
     if verbose:
         utils.print_response_message(r)
+
+
+def upload_big_dataset(training_file: str, server="cloud", verbose=False) -> None:
+    """
+    Upload big dataset
+    TODO: Replace upload_dataset with this?
+    """
+    lambda_url = utils.get_server_url(server) + "/generate_upload_url"
+    headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary?
+    headers["X-Dataset"] = training_file
+    r = requests.get(lambda_url, headers=headers)
+    utils.check_response(r)
+    if verbose:
+        utils.print_response_message(r)
+    upload_url = r.json()["url"]
+    utils.upload_file_to_presigned_url(
+        training_file, upload_url, verbose=verbose)
 
 
 def query_dataset(dataset: str, server="cloud", verbose=False) -> pd.DataFrame:

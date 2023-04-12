@@ -113,7 +113,7 @@ def list_campaigns(server="cloud", verbose=False) -> list:
     if verbose:
         utils.print_response_message(r)
     response = r.json()
-    return response["campaign_ids"]
+    return response["campaigns"]
 
 
 def sample_campaign(

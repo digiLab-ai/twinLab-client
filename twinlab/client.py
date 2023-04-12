@@ -98,7 +98,7 @@ def query_campaign(campaign: str, server="cloud", verbose=False) -> pd.DataFrame
     if verbose:
         utils.print_response_message(r)
         print("Metadata:")
-        pprint(metadata)
+        pprint(metadata, compact=True, sort_dicts=False)
     return metadata
 
 

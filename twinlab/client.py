@@ -38,8 +38,13 @@ def upload_big_dataset(filepath: str, server="cloud", verbose=False) -> None:
     if verbose:
         utils.print_response_message(r)
     upload_url = r.json()["url"]
+    print(f"Uploading {filepath} to {upload_url}. \n")
     utils.upload_file_to_presigned_url(
         filepath, upload_url, verbose=verbose)
+    process_url = utils.get_server_url(server) + "/process_uploaded_dataset"
+    r = requests.post(process_url, headers=headers)
+    if verbose:
+        utils.print_response_message(r)
 
 
 def query_dataset(dataset: str, server="cloud", verbose=False) -> pd.DataFrame:

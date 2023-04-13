@@ -16,5 +16,5 @@ from .client import list_campaigns
 from .client import delete_campaign
 
 # Plotting functions
-from .utils import get_blur_boundaries
-from .utils import get_blur_alpha
+from .plotting import get_blur_boundaries
+from .plotting import get_blur_alpha

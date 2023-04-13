@@ -138,6 +138,6 @@ def check_response(r: requests.Response) -> None:
     if r.status_code != 200:
         print("Status code:", r.status_code)
         print_response_message(r)
-        raise RuntimeError("Response error")\
+        raise RuntimeError("Response error")
 
 ### ###

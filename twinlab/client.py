@@ -11,21 +11,21 @@ from . import utils
 ### Dataset functions ###
 
 
+# def upload_small_dataset(filepath: str, server="cloud", verbose=False) -> None:
+#     """
+#     Upload dataset
+#     TODO: Retire in favour of upload_big_dataset?
+#     """
+#     url = utils.get_server_url(server) + "/upload_dataset"
+#     files = {"file": (filepath, open(filepath, "rb"), "text/csv")}
+#     headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary?
+#     r = requests.post(url, files=files, headers=headers)
+#     utils.check_response(r)
+#     if verbose:
+#         utils.print_response_message(r)
+
+
 def upload_dataset(filepath: str, server="cloud", verbose=False) -> None:
-    """
-    Upload dataset
-    TODO: Retire in favour of upload_big_dataset?
-    """
-    url = utils.get_server_url(server) + "/upload_dataset"
-    files = {"file": (filepath, open(filepath, "rb"), "text/csv")}
-    headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary?
-    r = requests.post(url, files=files, headers=headers)
-    utils.check_response(r)
-    if verbose:
-        utils.print_response_message(r)
-
-
-def upload_big_dataset(filepath: str, server="cloud", verbose=False) -> None:
     """
     Upload big dataset
     TODO: Replace upload_dataset with this?

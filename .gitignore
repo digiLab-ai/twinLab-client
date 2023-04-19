@@ -128,7 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
 ## digiLab ##
 
 # AWS
@@ -141,7 +140,7 @@ template.yaml
 # Rough working
 notebooks/scrap.ipynb
 
-# Datasets
+# Large datasets
 datasets/ukaea.csv
 datasets/biggest.csv
 

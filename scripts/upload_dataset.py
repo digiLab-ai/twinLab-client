@@ -2,6 +2,6 @@
 import twinlab as tl
 
 print()  #  Initial white space
-file = "datasets/biscuits.csv"
+file = "datasets/bigger.csv"
 server = tl.get_command_line_args().server
-tl.upload_dataset(file, server, verbose=True)
+tl.upload_big_dataset(file, server, verbose=True)

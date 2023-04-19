@@ -2,7 +2,6 @@
 from .utils import get_command_line_args
 
 # API dataset functions
-from .client import upload_big_dataset
 from .client import upload_dataset
 from .client import query_dataset
 from .client import list_datasets

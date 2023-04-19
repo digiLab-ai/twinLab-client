@@ -68,7 +68,7 @@ def get_server_url(server: str) -> str:
 ### HTTP requests ###
 
 
-def upload_file_to_presigned_url(file_path, presigned_url, verbose=False):
+def upload_file_to_presigned_url(file_path: str, presigned_url: str, verbose=False) -> None:
     """
     Upload a file to the specified pre-signed URL.
 

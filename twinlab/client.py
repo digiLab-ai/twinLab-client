@@ -14,7 +14,6 @@ from . import utils
 def upload_dataset(filepath: str, server="cloud", verbose=False) -> None:
     """
     Upload big dataset
-    TODO: Replace upload_dataset with this?
     """
     lambda_url = utils.get_server_url(server) + "/generate_upload_url"
     headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary?
@@ -95,7 +94,7 @@ def train_campaign(params: dict, campaign: str, server="cloud", verbose=False) -
         utils.print_response_message(r)
 
 
-def query_campaign(campaign: str, server="cloud", verbose=False) -> pd.DataFrame:
+def query_campaign(campaign: str, server="cloud", verbose=False) -> dict:
     """
     Query campaign
     """

@@ -100,7 +100,7 @@ def extract_csv_from_response(response: requests.Response, name: str) -> pd.Data
     return df
 
 
-def extract_item_from_response(response: requests.Response, name: str) -> pd.DataFrame:
+def extract_item_from_response(response: requests.Response, name: str) -> any:
     """
     Extract CSV from response
     """

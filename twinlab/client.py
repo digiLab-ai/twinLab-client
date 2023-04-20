@@ -11,20 +11,6 @@ from . import utils
 ### Dataset functions ###
 
 
-# def upload_small_dataset(filepath: str, server="cloud", verbose=False) -> None:
-#     """
-#     Upload dataset
-#     TODO: Retire in favour of upload_big_dataset?
-#     """
-#     url = utils.get_server_url(server) + "/upload_dataset"
-#     files = {"file": (filepath, open(filepath, "rb"), "text/csv")}
-#     headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary?
-#     r = requests.post(url, files=files, headers=headers)
-#     utils.check_response(r)
-#     if verbose:
-#         utils.print_response_message(r)
-
-
 def upload_dataset(filepath: str, server="cloud", verbose=False) -> None:
     """
     Upload big dataset
@@ -38,7 +24,8 @@ def upload_dataset(filepath: str, server="cloud", verbose=False) -> None:
     if verbose:
         utils.print_response_message(r)
     upload_url = r.json()["url"]
-    print(f"Uploading {filepath} to {upload_url}. \n")
+    if verbose:
+        print(f"Uploading {filepath}")
     utils.upload_file_to_presigned_url(
         filepath, upload_url, verbose=verbose)
     process_url = utils.get_server_url(server) + "/process_uploaded_dataset"

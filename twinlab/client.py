@@ -142,8 +142,8 @@ def sample_campaign(
     df_std = utils.extract_csv_from_response(r, "y_std")
     if verbose:
         utils.print_response_message(r)
-        print("Mean:", df_mean, "\n")
-        print("Std:", df_std, "\n")
+        print("Mean: \n", df_mean, "\n")
+        print("Std: \n", df_std, "\n")
     return df_mean, df_std
 
 

@@ -83,9 +83,11 @@ def delete_dataset(dataset: str, server="cloud", verbose=False) -> None:
 def train_campaign(params: dict, campaign: str, server="cloud", verbose=False) -> None:
     """
     Train campaign
-    TODO: Set default train_test_split?
     """
-    url = utils.get_server_url(server) + "/train_campaign"
+    if server == "cloud":
+        url = utils.TRAIN_CAMPAIGN_CLOUD_URL
+    else:
+        url = utils.get_server_url(server) + "/train_campaign"
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
     r = requests.post(url, json=params, headers=headers)

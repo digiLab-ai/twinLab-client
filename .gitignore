@@ -140,10 +140,6 @@ template.yaml
 # Rough working
 notebooks/scrap.ipynb
 
-# Large datasets
-datasets/ukaea.csv
-datasets/biggest.csv
-
 # Poetry
 poetry.lock
 

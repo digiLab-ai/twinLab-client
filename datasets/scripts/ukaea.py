@@ -3,7 +3,7 @@ import pandas as pd
 
 # Parameters
 seed = 123
-n_small = 100
+n_small = 400
 infile = "datasets/ukaea.csv"
 outfile_small = "datasets/ukaea_small.csv"
 n_test = 5

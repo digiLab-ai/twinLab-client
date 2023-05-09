@@ -5,26 +5,26 @@ import json
 import twinlab as tl
 
 # Parameters
-dataset_dir = "datasets"
-dataset = "biscuits.csv"
-campaign_dir = "campaigns/biscuits"
-training_file = dataset_dir+"/"+dataset
-params_file = campaign_dir+"/params.json"
-eval_file = campaign_dir+"/eval.csv"
-campaign = "biscuits"
+dataset_directory = "datasets"
+dataset_filename = "biscuits.csv"
+campaign_directory = "campaigns/biscuits"
+training_filepath = dataset_directory+"/"+dataset_filename
+params_filepath = campaign_directory+"/params.json"
+eval_filepath = campaign_directory+"/eval.csv"
+campaign_name = "biscuits"
 
 # Load parameters
-with open(params_file, "r") as f:
+with open(params_filepath, "r") as f:
     params = json.load(f)
 
 print()  #  Initial white space
 server = tl.get_command_line_args().server
-tl.upload_dataset(training_file, server, verbose=True)
-tl.query_dataset(dataset, server, verbose=True)
+tl.upload_dataset(training_filepath, server, verbose=True)
+tl.query_dataset(dataset_filename, server, verbose=True)
 tl.list_datasets(server, verbose=True)
-tl.train_campaign(params, campaign, server, verbose=True)
-tl.query_campaign(campaign, server, verbose=True)
+tl.train_campaign(params, campaign_name, server, verbose=True)
+tl.query_campaign(campaign_name, server, verbose=True)
 tl.list_campaigns(server, verbose=True)
-tl.sample_campaign(eval_file, campaign, server, verbose=True)
-tl.delete_campaign(campaign, server, verbose=True)
-tl.delete_dataset(dataset, server, verbose=True)
+tl.sample_campaign(eval_filepath, campaign_name, server, verbose=True)
+tl.delete_campaign(campaign_name, server, verbose=True)
+tl.delete_dataset(dataset_filename, server, verbose=True)

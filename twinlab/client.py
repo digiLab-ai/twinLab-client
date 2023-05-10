@@ -20,9 +20,9 @@ def upload_dataset(dataset_filepath: str, server="cloud", verbose=False) -> None
         verbose: bool
     """
     # TODO: Allow for uploading pandas dataframes
-    lambda_url = utils.get_server_url(server) + "/generate_upload_url"
-    headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary?
+    headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary here?
     headers["X-Dataset"] = dataset_filepath
+    lambda_url = utils.get_server_url(server) + "/generate_upload_url"
     r = requests.get(lambda_url, headers=headers)
     utils.check_response(r)
     if verbose:

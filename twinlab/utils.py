@@ -13,6 +13,7 @@ from .settings import ENV
 STANDARD_HEADERS = {
     "X-Group": ENV.GROUP_NAME,
     "X-User": ENV.USER_NAME,
+    "authorizationToken": ENV.AUTH_TOKEN,
 }
 
 TRAIN_CAMPAIGN_CLOUD_URL = "https://4qpjawhm6wlrwe47kigbt2q7j40miizi.lambda-url.eu-west-2.on.aws/"

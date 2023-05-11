@@ -102,22 +102,13 @@ def upload_dataframe_to_presigned_url(dataset_name: str, df: pd.DataFrame, url: 
         df: The pandas dataframe to upload
         presigned_url: The pre-signed URL generated for uploading the file.
     """
-    WRITE_TO_DISK = True
-    TMP_DIR = "/tmp/"
     if "/" in dataset_name:
         raise ValueError("Dataset name cannot contain '/'")
-    if WRITE_TO_DISK:
-        headers = {"Content-Type": "application/octet-stream"}
-        filepath = os.path.join(TMP_DIR, dataset_name)
-        df.to_csv(filepath, index=False)
-        with open(filepath, "rb") as file:
-            response = requests.put(url, data=file, headers=headers)
-    else:
-        headers = {"Content-Type": "application/octet-stream"}
-        buffer = io.BytesIO()
-        df.to_csv(buffer, index=False)
-        buffer.getvalue()
-        response = requests.put(url, data=buffer, headers=headers)
+    headers = {"Content-Type": "application/octet-stream"}
+    buffer = io.BytesIO()
+    df.to_csv(buffer, index=False)
+    buffer = buffer.getvalue()
+    response = requests.put(url, data=buffer, headers=headers)
     if verbose:
         if response.status_code == 200:
             print(f"Dataframe uploaded successfully.")

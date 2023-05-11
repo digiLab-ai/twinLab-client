@@ -1,5 +1,5 @@
 # Standard imports
-import os
+import io
 from pprint import pprint
 
 # Third-party imports
@@ -172,14 +172,13 @@ def sample_campaign(
         verbose: bool
     """
     # TODO: Rename to evaluate_campaign?
-    TMP_DIR = "/tmp/"
-    TMP_FILE = "tmp.csv"
     url = utils.get_server_url(server) + "/sample_campaign"
     if isinstance(filepath_or_df, pd.DataFrame):  # Data frames
-        tmp_filepath = os.path.join(TMP_DIR, TMP_FILE)
-        filepath_or_df.to_csv(tmp_filepath, index=False)
-        files = {"file": (tmp_filepath, open(tmp_filepath, "rb"), "text/csv")}
-    else:
+        buffer = io.BytesIO()
+        filepath_or_df.to_csv(buffer, index=False)
+        buffer = buffer.getvalue()
+        files = {"file": ("tmp.csv", buffer, "text/csv")}
+    else:  # File paths
         files = {"file": (filepath_or_df, open(
             filepath_or_df, "rb"), "text/csv")}
     headers = utils.STANDARD_HEADERS.copy()

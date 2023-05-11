@@ -11,35 +11,44 @@ from . import utils
 ### Dataset functions ###
 
 
-def upload_dataset(filepath: str, server="cloud", verbose=False) -> None:
+def upload_dataset(dataset_filepath: str, server="cloud", verbose=False) -> None:
     """
-    Upload big dataset
+    Upload a dataset to the cloud so that it can be queried and used for training
+    params:
+        dataset_filepath: str; location of csv dataset on local machine
+        server: str; either "cloud" or "local"
+        verbose: bool
     """
+    # TODO: Allow for uploading pandas dataframes
+    headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary here?
+    headers["X-Dataset"] = dataset_filepath
     lambda_url = utils.get_server_url(server) + "/generate_upload_url"
-    headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary?
-    headers["X-Dataset"] = filepath
     r = requests.get(lambda_url, headers=headers)
     utils.check_response(r)
     if verbose:
         utils.print_response_message(r)
     upload_url = r.json()["url"]
     if verbose:
-        print(f"Uploading {filepath}")
+        print(f"Uploading {dataset_filepath}")
     utils.upload_file_to_presigned_url(
-        filepath, upload_url, verbose=verbose)
+        dataset_filepath, upload_url, verbose=verbose)
     process_url = utils.get_server_url(server) + "/process_uploaded_dataset"
     r = requests.post(process_url, headers=headers)
     if verbose:
         utils.print_response_message(r)
 
 
-def query_dataset(dataset: str, server="cloud", verbose=False) -> pd.DataFrame:
+def query_dataset(dataset_name: str, server="cloud", verbose=False) -> pd.DataFrame:
     """
-    Query dataset
+    Query a dataset that exists on the cloud by printing summary statistics
+    params:
+        dataset_name: str; name of dataset on S3 (same as the uploaded file name)
+        server: str; either "cloud" or "local"
+        verbose: bool
     """
     url = utils.get_server_url(server) + "/query_dataset"
     headers = utils.STANDARD_HEADERS.copy()
-    headers["X-Dataset"] = dataset
+    headers["X-Dataset"] = dataset_name
     r = requests.get(url, headers=headers)
     utils.check_response(r)
     df = utils.extract_csv_from_response(r, "summary")
@@ -51,7 +60,10 @@ def query_dataset(dataset: str, server="cloud", verbose=False) -> pd.DataFrame:
 
 def list_datasets(server="cloud", verbose=False) -> list:
     """
-    List datasets in S3
+    List datasets that have been uploaded to the cloud
+    params:
+        server: str; either "cloud" or "local"
+        verbose: bool
     """
     url = utils.get_server_url(server) + "/list_datasets"
     headers = utils.STANDARD_HEADERS.copy()
@@ -63,13 +75,17 @@ def list_datasets(server="cloud", verbose=False) -> list:
     return response["datasets"]
 
 
-def delete_dataset(dataset: str, server="cloud", verbose=False) -> None:
+def delete_dataset(dataset_name: str, server="cloud", verbose=False) -> None:
     """
-    Delete campaign directory from S3
+    Delete a dataset from the cloud
+    params:
+        dataset_name: str; name of dataset on S3 (same as the uploaded file name)
+        server: str; either "cloud" or "local"
+        verbose: bool
     """
     url = utils.get_server_url(server) + "/delete_dataset"
     headers = utils.STANDARD_HEADERS.copy()
-    headers["X-Dataset"] = dataset
+    headers["X-Dataset"] = dataset_name
     r = requests.post(url, headers=headers)
     utils.check_response(r)
     if verbose:
@@ -82,7 +98,12 @@ def delete_dataset(dataset: str, server="cloud", verbose=False) -> None:
 
 def train_campaign(params: dict, campaign: str, server="cloud", verbose=False) -> None:
     """
-    Train campaign
+    Train a campaign remotely using twinLab
+    params:
+        params: dict; parameters for training
+        campaign: str; name of this campaign and final trained model (user choice)
+        server: str; either "cloud" or "local"
+        verbose: bool
     """
     if server == "cloud":
         url = utils.TRAIN_CAMPAIGN_CLOUD_URL
@@ -96,13 +117,17 @@ def train_campaign(params: dict, campaign: str, server="cloud", verbose=False) -
         utils.print_response_message(r)
 
 
-def query_campaign(campaign: str, server="cloud", verbose=False) -> dict:
+def query_campaign(campaign_name: str, server="cloud", verbose=False) -> dict:
     """
-    Query campaign
+    Print summary statistics for a pre-trained campaign
+    params:
+        campaign_name: str; name of trained model to query
+        server: str; either "cloud" or "local"
+        verbose: bool
     """
     url = utils.get_server_url(server) + "/query_campaign"
     headers = utils.STANDARD_HEADERS.copy()
-    headers["X-Campaign"] = campaign
+    headers["X-Campaign"] = campaign_name
     r = requests.get(url, headers=headers)
     utils.check_response(r)
     metadata = utils.extract_item_from_response(r, "metadata")
@@ -115,7 +140,10 @@ def query_campaign(campaign: str, server="cloud", verbose=False) -> dict:
 
 def list_campaigns(server="cloud", verbose=False) -> list:
     """
-    List campaigns in S3
+    List all trained campaigns stored in cloud
+    params:
+        server: str; either "cloud" or "local"
+        verbose: bool
     """
     url = utils.get_server_url(server) + "/list_campaigns"
     headers = utils.STANDARD_HEADERS.copy()
@@ -128,13 +156,20 @@ def list_campaigns(server="cloud", verbose=False) -> list:
 
 
 def sample_campaign(
-    test_file: str, campaign: str, server="cloud", verbose=False
+    filepath: str, campaign: str, server="cloud", verbose=False
 ) -> tuple:
     """
-    Sample campaign
+    Sample a pre-trained campaign that exists on the cloud
+    params:
+        filepath: str; location of csv dataset on local machine for evaluation
+        campaign: str; name of pre-trained model to do the evaluating
+        server: str; either "cloud" or "local"
+        verbose: bool
     """
+    # TODO: Rename to evaluate_campaign?
+    # TODO: Allow for uploading pandas dataframes
     url = utils.get_server_url(server) + "/sample_campaign"
-    files = {"file": (test_file, open(test_file, "rb"), "text/csv")}
+    files = {"file": (filepath, open(filepath, "rb"), "text/csv")}
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
     r = requests.post(url, files=files, headers=headers)
@@ -148,13 +183,17 @@ def sample_campaign(
     return df_mean, df_std
 
 
-def delete_campaign(campaign: str, server="cloud", verbose=False) -> None:
+def delete_campaign(campaign_name: str, server="cloud", verbose=False) -> None:
     """
     Delete campaign directory from S3
+    params:
+        campaign_name: str; name of trained model to delete
+        server: str; either "cloud" or "local"
+        verbose: bool
     """
     url = utils.get_server_url(server) + "/delete_campaign"
     headers = utils.STANDARD_HEADERS.copy()
-    headers["X-Campaign"] = campaign
+    headers["X-Campaign"] = campaign_name
     r = requests.post(url, headers=headers)
     utils.check_response(r)
     if verbose:

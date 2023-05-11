@@ -6,6 +6,7 @@ class Environment(BaseSettings):
     CLOUD_SERVER: str
     GROUP_NAME: str
     USER_NAME: str
+    AUTH_TOKEN: str
 
     class Config:
         env_prefix = ""

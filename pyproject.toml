@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "twinlab"
-version = "1.0.3"
+version = "1.1.0"
 description = "Client interface for twinLab"
 authors = ["Alexander Mead <alexander@digilab.co.uk>", "Freddy Wordingham <freddy@digilab.co.uk>"]
 repository = "https://github.com/digiLab-ai/twinLab-client"

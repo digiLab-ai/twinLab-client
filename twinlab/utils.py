@@ -1,4 +1,6 @@
 # Standard imports
+import io
+import os
 import argparse
 import json
 from pprint import pprint
@@ -71,21 +73,54 @@ def get_server_url(server: str) -> str:
 ### HTTP requests ###
 
 
-def upload_file_to_presigned_url(file_path: str, presigned_url: str, verbose=False) -> None:
+def upload_file_to_presigned_url(file_path: str, url: str, verbose=False) -> None:
     """
     Upload a file to the specified pre-signed URL.
-
-    :param file_path: The path to the file you want to upload.
-    :param presigned_url: The pre-signed URL generated for uploading the file.
-    :return: True if the upload is successful, False otherwise.
+    params:
+        file_path: str; the path to the local file you want to upload.
+        presigned_url: The pre-signed URL generated for uploading the file.
+        verbose: bool
     """
 
     with open(file_path, "rb") as file:
         headers = {"Content-Type": "application/octet-stream"}
-        response = requests.put(presigned_url, data=file, headers=headers)
+        response = requests.put(url, data=file, headers=headers)
     if verbose:
         if response.status_code == 200:
             print(f"File {file_path} uploaded successfully.")
+        else:
+            print(f"File upload failed")
+            print(f"Status code: {response.status_code}")
+            print(f"Reason: {response.text}")
+        print()
+
+
+def upload_dataframe_to_presigned_url(dataset_name: str, df: pd.DataFrame, url: str, verbose=False) -> None:
+    """
+    Upload a panads dataframe to the specified pre-signed URL.
+    params:
+        df: The pandas dataframe to upload
+        presigned_url: The pre-signed URL generated for uploading the file.
+    """
+    WRITE_TO_DISK = True
+    TMP_DIR = "/tmp/"
+    if "/" in dataset_name:
+        raise ValueError("Dataset name cannot contain '/'")
+    if WRITE_TO_DISK:
+        headers = {"Content-Type": "application/octet-stream"}
+        filepath = os.path.join(TMP_DIR, dataset_name)
+        df.to_csv(filepath, index=False)
+        with open(filepath, "rb") as file:
+            response = requests.put(url, data=file, headers=headers)
+    else:
+        headers = {"Content-Type": "application/octet-stream"}
+        buffer = io.BytesIO()
+        df.to_csv(buffer, index=False)
+        buffer.getvalue()
+        response = requests.put(url, data=buffer, headers=headers)
+    if verbose:
+        if response.status_code == 200:
+            print(f"Dataframe uploaded successfully.")
         else:
             print(f"File upload failed")
             print(f"Status code: {response.status_code}")

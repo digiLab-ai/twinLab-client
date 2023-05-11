@@ -1,4 +1,5 @@
 # Standard imports
+import os
 from pprint import pprint
 
 # Third-party imports
@@ -11,15 +12,15 @@ from . import utils
 ### Dataset functions ###
 
 
-def upload_dataset(dataset_filepath: str, server="cloud", verbose=False) -> None:
+def upload_dataset(dataset_filepath: str, df=None, server="cloud", verbose=False) -> None:
     """
     Upload a dataset to the cloud so that it can be queried and used for training
     params:
         dataset_filepath: str; location of csv dataset on local machine
+        dt: None or pd.DataFrame; if None, then dataset_filepath is used to load the dataframe
         server: str; either "cloud" or "local"
         verbose: bool
     """
-    # TODO: Allow for uploading pandas dataframes
     headers = utils.STANDARD_HEADERS.copy()  #  TODO: Is .copy() necessary here?
     headers["X-Dataset"] = dataset_filepath
     lambda_url = utils.get_server_url(server) + "/generate_upload_url"
@@ -28,10 +29,14 @@ def upload_dataset(dataset_filepath: str, server="cloud", verbose=False) -> None
     if verbose:
         utils.print_response_message(r)
     upload_url = r.json()["url"]
+    if df is None:
+        utils.upload_file_to_presigned_url(
+            dataset_filepath, upload_url, verbose=verbose)
+    else:
+        utils.upload_dataframe_to_presigned_url(dataset_filepath,
+                                                df, upload_url, verbose=verbose)
     if verbose:
         print(f"Uploading {dataset_filepath}")
-    utils.upload_file_to_presigned_url(
-        dataset_filepath, upload_url, verbose=verbose)
     process_url = utils.get_server_url(server) + "/process_uploaded_dataset"
     r = requests.post(process_url, headers=headers)
     if verbose:
@@ -156,7 +161,7 @@ def list_campaigns(server="cloud", verbose=False) -> list:
 
 
 def sample_campaign(
-    filepath: str, campaign: str, server="cloud", verbose=False
+    filepath_or_df, campaign: str, server="cloud", verbose=False
 ) -> tuple:
     """
     Sample a pre-trained campaign that exists on the cloud
@@ -167,9 +172,16 @@ def sample_campaign(
         verbose: bool
     """
     # TODO: Rename to evaluate_campaign?
-    # TODO: Allow for uploading pandas dataframes
+    TMP_DIR = "/tmp/"
+    TMP_FILE = "tmp.csv"
     url = utils.get_server_url(server) + "/sample_campaign"
-    files = {"file": (filepath, open(filepath, "rb"), "text/csv")}
+    if isinstance(filepath_or_df, pd.DataFrame):  # Data frames
+        tmp_filepath = os.path.join(TMP_DIR, TMP_FILE)
+        filepath_or_df.to_csv(tmp_filepath, index=False)
+        files = {"file": (tmp_filepath, open(tmp_filepath, "rb"), "text/csv")}
+    else:
+        files = {"file": (filepath_or_df, open(
+            filepath_or_df, "rb"), "text/csv")}
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
     r = requests.post(url, files=files, headers=headers)

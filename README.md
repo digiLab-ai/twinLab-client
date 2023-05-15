@@ -11,31 +11,45 @@ Headless interface to the `twinLab` library.
 
 ## Installation
 
+Most users should use `pip`
+```shell
+pip install twinlab
+```
+
+If you want to modify the client-side code, or have a local installation for some reason
 ```shell
 poetry install
 ```
 
 ## Environment setup
 
-```shell
-cp .env.example .env
+You will need a `.env` file in your project directory that looks like the `.env.example` file in this repository
 ```
-
+LOCAL_SERVER="http://localhost:3000"
+CLOUD_SERVER="https://26rzbaygu9.execute-api.eu-west-2.amazonaws.com/Prod"
+GROUP_NAME=
+USER_NAME=
+AUTH_TOKEN=
+```
 and fill in your group and user names.
 
 ## Commands
 
-Local or cloud testing:
+Testing:
 
 ```python
-poetry run python scripts/trigger.py local_or_cloud
+poetry run python scripts/test.py cloud 
 ```
+where `test.py` can be replaced with any of the scripts in the `script` directory.
 
-where the `local_or_cloud` flag is either `local` or `cloud` and where `trigger.py` can be replaced with any of the scripts in the `script` directory.
-You need to have a local server for the `twinlab-cloud` repository running for local testing.
+You need to have a local server for the (private) `twinlab-cloud` repository running for local testing. But local testing can then be run with
+```python
+poetry run python scripts/test.py local
+```
 
 ## Example
 
+Here we create some mock data (which has a quadratic relationship between `X` and `y`) and use `twinLab` to create a surrogate model with quantified uncertainty.
 ```python
 # Import libraries
 import twinlab as tl
@@ -60,13 +74,11 @@ df_mean, df_std = tl.sample_campaign(df, campaign='test')
 
 ## Notebooks
 
-Check out the `notebooks` directory for some examples to get started!
+Check out the `notebooks` directory for some additional examples to get started!
 
 ## Documentation
 
-See the live documentation at https://digilab-ai.github.io/twinLab-client/
-
-Or build a copy locally:
+See the live documentation at https://digilab-ai.github.io/twinLab-client/. Or build a copy locally:
 ```shell
 cd docs
 yarn start

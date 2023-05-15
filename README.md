@@ -36,7 +36,7 @@ You need to have a local server for the `twinlab-cloud` repository running for l
 
 ## Example
 
-```shell
+```python
 # Import libraries
 import twinlab as tl
 import pandas as pd

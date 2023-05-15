@@ -1,5 +1,6 @@
 # Standard imports
 import io
+import json
 from pprint import pprint
 
 # Third-party imports
@@ -101,11 +102,11 @@ def delete_dataset(dataset_name: str, server="cloud", verbose=False) -> None:
 ### Campaign functions ###
 
 
-def train_campaign(params: dict, campaign: str, server="cloud", verbose=False) -> None:
+def train_campaign(filepath_or_params, campaign: str, server="cloud", verbose=False) -> None:
     """
     Train a campaign remotely using twinLab
     params:
-        params: dict; parameters for training
+        filepath_or_params: str or dict; filepath to json or parameters dict for training
         campaign: str; name of this campaign and final trained model (user choice)
         server: str; either "cloud" or "local"
         verbose: bool
@@ -116,6 +117,12 @@ def train_campaign(params: dict, campaign: str, server="cloud", verbose=False) -
         url = utils.get_server_url(server) + "/train_campaign"
     headers = utils.STANDARD_HEADERS.copy()
     headers["X-Campaign"] = campaign
+    if isinstance(filepath_or_params, str):
+        filepath = filepath_or_params
+        with open(filepath) as f:
+            params = json.load(f)
+    else:
+        params = filepath_or_params
     r = requests.post(url, json=params, headers=headers)
     utils.check_response(r)
     if verbose:

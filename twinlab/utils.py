@@ -17,7 +17,10 @@ STANDARD_HEADERS = {
     "X-User": ENV.USER_NAME,
     "authorizationToken": ENV.AUTH_TOKEN,
 }
-
+PARAMS_COERCION = {
+    "test_train_split": "train_test_split",  # Common mistake
+    # "num_train": # TODO: Think of something better
+}
 TRAIN_CAMPAIGN_CLOUD_URL = "https://4qpjawhm6wlrwe47kigbt2q7j40miizi.lambda-url.eu-west-2.on.aws/"
 
 ### Utility functions ###
@@ -67,6 +70,14 @@ def get_server_url(server: str) -> str:
         print("Server:", server)
         raise ValueError("Server must be either 'local' or 'cloud'")
     return baseURL
+
+
+def coerce_params_dict(params: dict) -> dict:
+    for param in PARAMS_COERCION:
+        if param in params:
+            params[PARAMS_COERCION[param]] = params.pop(param)
+    return params
+
 
 ### ###
 

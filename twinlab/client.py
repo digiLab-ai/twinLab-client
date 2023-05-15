@@ -123,6 +123,7 @@ def train_campaign(filepath_or_params, campaign: str, server="cloud", verbose=Fa
             params = json.load(f)
     else:
         params = filepath_or_params
+    params = utils.coerce_params_dict(params)
     r = requests.post(url, json=params, headers=headers)
     utils.check_response(r)
     if verbose:

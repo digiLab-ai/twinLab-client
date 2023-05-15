@@ -1,9 +1,18 @@
 [tool.poetry]
 name = "twinlab"
 version = "1.1.0"
-description = "Client interface for twinLab"
-authors = ["Alexander Mead <alexander@digilab.co.uk>", "Freddy Wordingham <freddy@digilab.co.uk>"]
+description = "Client interface for twinLab machine-learning in the cloud."
+license = "MIT"
+homepage = "https://www.digilab.co.uk/"
 repository = "https://github.com/digiLab-ai/twinLab-client"
+documentation = "https://digilab-ai.github.io/twinLab-client"
+authors = ["DigiLab Solutions Ltd. <info@digilab.co.uk>"]
+maintainers = [
+    "Alexander Mead <alexander@digilab.co.uk>",
+    "Freddy Wordingham <freddy@digilab.co.uk>",
+    "Jordan Hart <jordan@digilab.co.uk>",
+]
+keywords = ["machine-learning", "AI", "cloud", "twinLab", "digiLab"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

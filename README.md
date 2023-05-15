@@ -19,6 +19,7 @@ pip install twinlab
 If you want to modify the client-side code, or have a local installation for some reason
 ```shell
 git clone https://github.com/digiLab-ai/twinLab-client.git
+cd twinlab-client
 poetry install
 ```
 

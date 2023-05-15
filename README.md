@@ -31,7 +31,7 @@ GROUP_NAME=
 USER_NAME=
 AUTH_TOKEN=
 ```
-and fill in your group and user names.
+and fill in your group name, user name, and authorisation token.
 
 ## Commands
 

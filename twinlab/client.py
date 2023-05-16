@@ -183,7 +183,7 @@ def predict_campaign(
         verbose: bool
     """
     url = utils.get_server_url(
-        server) + "/sample_campaign"  # TODO: Change to /predict_campaign
+        server) + "/predict_campaign"
     if isinstance(filepath_or_df, pd.DataFrame):  # Data frames
         buffer = io.BytesIO()
         filepath_or_df.to_csv(buffer, index=False)

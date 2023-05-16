@@ -6,4 +6,4 @@ file = "campaigns/biscuits/eval.csv"
 campaign = "biscuits"
 server = tl.get_command_line_args().server
 df_mean, df_std = tl.predict_campaign(
-    file, campaign, server=server, verbose=True)
+    file, campaign, server=server, verbose=True, debug=True)

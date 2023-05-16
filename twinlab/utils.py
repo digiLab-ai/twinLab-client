@@ -11,11 +11,7 @@ import pandas as pd
 # Project imports
 from .settings import ENV
 
-STANDARD_HEADERS = {
-    "X-Group": ENV.GROUP_NAME,
-    "X-User": ENV.USER_NAME,
-    "authorizationToken": ENV.AUTH_TOKEN,
-}
+
 PARAMS_COERCION = {  # Convert these names in the params file
     "test_train_split": "train_test_split",  # Common mistake
     # "num_train_examples": "train_test_split", # TODO: Think of something better
@@ -55,6 +51,16 @@ def get_command_line_args() -> argparse.Namespace:
     )
     args = parser.parse_args()
     return args
+
+
+def construct_standard_headers(debug=False) -> dict:
+    headers = {
+        "X-Group": ENV.GROUP_NAME,
+        "X-User": ENV.USER_NAME,
+        "authorizationToken": ENV.AUTH_TOKEN,
+        "X-Debug": str(debug).lower(),
+    }
+    return headers
 
 
 def get_server_url(server: str) -> str:

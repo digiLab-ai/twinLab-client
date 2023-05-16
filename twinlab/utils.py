@@ -1,6 +1,5 @@
 # Standard imports
 import io
-import os
 import argparse
 import json
 from pprint import pprint
@@ -17,9 +16,9 @@ STANDARD_HEADERS = {
     "X-User": ENV.USER_NAME,
     "authorizationToken": ENV.AUTH_TOKEN,
 }
-PARAMS_COERCION = {
+PARAMS_COERCION = {  # Convert these names in the params file
     "test_train_split": "train_test_split",  # Common mistake
-    # "num_train": # TODO: Think of something better
+    # "num_train_examples": "train_test_split", # TODO: Think of something better
 }
 TRAIN_CAMPAIGN_CLOUD_URL = "https://4qpjawhm6wlrwe47kigbt2q7j40miizi.lambda-url.eu-west-2.on.aws/"
 
@@ -73,6 +72,9 @@ def get_server_url(server: str) -> str:
 
 
 def coerce_params_dict(params: dict) -> dict:
+    """
+    Relabel parameters to be consistent with twinLab library
+    """
     for param in PARAMS_COERCION:
         if param in params:
             params[PARAMS_COERCION[param]] = params.pop(param)
@@ -158,14 +160,6 @@ def print_response_headers(r: requests.Response) -> None:
     print()
 
 
-# def print_response_text(r: requests.Response) -> None:
-#     """
-#     Print response message
-#     """
-#     print("Response:")
-#     for key, value in json.loads(r.text).items():
-#         print(f"{key}: {value}")
-#     print()
 def print_response_message(r: requests.Response) -> None:
     """
     Print response message

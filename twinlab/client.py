@@ -34,7 +34,10 @@ def upload_dataset(dataset_filepath: str, df=None, server="cloud", verbose=False
         utils.upload_file_to_presigned_url(
             dataset_filepath, upload_url, verbose=verbose)
     else:
-        utils.upload_dataframe_to_presigned_url(dataset_filepath,
+        dataset_name = dataset_filepath
+        if "/" in dataset_name:
+            raise ValueError("Dataset name cannot contain '/'")
+        utils.upload_dataframe_to_presigned_url(dataset_name,
                                                 df, upload_url, verbose=verbose)
     if verbose:
         print(f"Uploading {dataset_filepath}")
@@ -168,19 +171,19 @@ def list_campaigns(server="cloud", verbose=False) -> list:
     return response["campaigns"]
 
 
-def sample_campaign(
+def predict_campaign(
     filepath_or_df, campaign: str, server="cloud", verbose=False
 ) -> tuple:
     """
-    Sample a pre-trained campaign that exists on the cloud
+    Predict from a pre-trained campaign that exists on the cloud
     params:
         filepath: str; location of csv dataset on local machine for evaluation
         campaign: str; name of pre-trained model to do the evaluating
         server: str; either "cloud" or "local"
         verbose: bool
     """
-    # TODO: Rename to evaluate_campaign?
-    url = utils.get_server_url(server) + "/sample_campaign"
+    url = utils.get_server_url(
+        server) + "/sample_campaign"  # TODO: Change to /predict_campaign
     if isinstance(filepath_or_df, pd.DataFrame):  # Data frames
         buffer = io.BytesIO()
         filepath_or_df.to_csv(buffer, index=False)

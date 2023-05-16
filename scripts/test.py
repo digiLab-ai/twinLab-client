@@ -19,12 +19,12 @@ with open(params_filepath, "r") as f:
 
 print()  #  Initial white space
 server = tl.get_command_line_args().server
-tl.upload_dataset(training_filepath, server, verbose=True)
-tl.query_dataset(dataset_filename, server, verbose=True)
-tl.list_datasets(server, verbose=True)
-tl.train_campaign(params, campaign_name, server, verbose=True)
-tl.query_campaign(campaign_name, server, verbose=True)
-tl.list_campaigns(server, verbose=True)
-tl.sample_campaign(eval_filepath, campaign_name, server, verbose=True)
-tl.delete_campaign(campaign_name, server, verbose=True)
-tl.delete_dataset(dataset_filename, server, verbose=True)
+tl.upload_dataset(training_filepath, server=server, verbose=True)
+tl.query_dataset(dataset_filename, server=server, verbose=True)
+tl.list_datasets(server=server, verbose=True)
+tl.train_campaign(params, campaign_name, server=server, verbose=True)
+tl.query_campaign(campaign_name, server=server, verbose=True)
+tl.list_campaigns(server=server, verbose=True)
+tl.predict_campaign(eval_filepath, campaign_name, server=server, verbose=True)
+tl.delete_campaign(campaign_name, server=server, verbose=True)
+tl.delete_dataset(dataset_filename, server=server, verbose=True)

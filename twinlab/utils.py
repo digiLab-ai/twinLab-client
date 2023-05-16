@@ -115,8 +115,6 @@ def upload_dataframe_to_presigned_url(dataset_name: str, df: pd.DataFrame, url: 
         df: The pandas dataframe to upload
         presigned_url: The pre-signed URL generated for uploading the file.
     """
-    if "/" in dataset_name:
-        raise ValueError("Dataset name cannot contain '/'")
     headers = {"Content-Type": "application/octet-stream"}
     buffer = io.BytesIO()
     df.to_csv(buffer, index=False)

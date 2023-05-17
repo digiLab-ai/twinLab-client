@@ -55,9 +55,9 @@ def get_command_line_args() -> argparse.Namespace:
 
 def construct_standard_headers(debug=False) -> dict:
     headers = {
-        "X-Group": ENV.GROUP_NAME,
-        "X-User": ENV.USER_NAME,
-        "authorizationToken": ENV.AUTH_TOKEN,
+        "X-Group": ENV.TWINLAB_GROUPNAME,
+        "X-User": ENV.TWINLAB_USERNAME,
+        "authorizationToken": ENV.TWINLAB_TOKEN,
         "X-Debug": str(debug).lower(),
     }
     return headers
@@ -68,12 +68,14 @@ def get_server_url(server: str) -> str:
     The URL is the dockerised lambda function that's been set up in cloud by alexander
     """
     if server == "local":
-        baseURL = ENV.LOCAL_SERVER
+        baseURL = ENV.TWINLAB_LOCAL_SERVER
     elif server == "cloud":
-        baseURL = ENV.CLOUD_SERVER
+        baseURL = ENV.TWINLAB_SERVER
+    elif server == "stage":
+        baseURL = ENV.TWINLAB_STAGE_SERVER
     else:
         print("Server:", server)
-        raise ValueError("Server must be either 'local' or 'cloud'")
+        raise ValueError("Server must be either 'local', 'cloud', or 'stage'")
     return baseURL
 
 

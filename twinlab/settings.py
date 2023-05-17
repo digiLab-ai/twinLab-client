@@ -1,9 +1,13 @@
+# Standard imports
+from typing import Optional
+
+# Third-party imports
 from pydantic import BaseSettings
 
 
 class Environment(BaseSettings):
-    TWINLAB_LOCAL_SERVER: str
-    TWINLAB_STAGE_SERVER: str
+    TWINLAB_LOCAL_SERVER: Optional[str]
+    TWINLAB_STAGE_SERVER: Optional[str]
     TWINLAB_SERVER: str
     TWINLAB_GROUPNAME: str
     TWINLAB_USERNAME: str

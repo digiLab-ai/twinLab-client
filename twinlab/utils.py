@@ -17,6 +17,7 @@ PARAMS_COERCION = {  # Convert these names in the params file
     # "num_train_examples": "train_test_split", # TODO: Think of something better
 }
 TRAIN_CAMPAIGN_CLOUD_URL = "https://4qpjawhm6wlrwe47kigbt2q7j40miizi.lambda-url.eu-west-2.on.aws/"
+TRAIN_CAMPAIGN_STAGE_URL = "https://b7vgjlsn73e7n7kci5rwoxjc7e0pkcqn.lambda-url.eu-west-2.on.aws/"
 
 ### Utility functions ###
 
@@ -77,6 +78,20 @@ def get_server_url(server: str) -> str:
         print("Server:", server)
         raise ValueError("Server must be either 'local', 'cloud', or 'stage'")
     return baseURL
+
+
+def get_train_campaign_url(server: str) -> str:
+    """
+    Get the URL for the train_campaign lambda function
+    These are different to avoid the AWS Lambda 29s gateway timeout
+    """
+    if server == "cloud":
+        url = TRAIN_CAMPAIGN_CLOUD_URL
+    elif server == "stage":
+        url = TRAIN_CAMPAIGN_STAGE_URL
+    else:
+        url = get_server_url(server) + "/train_campaign"
+    return url
 
 
 def coerce_params_dict(params: dict) -> dict:

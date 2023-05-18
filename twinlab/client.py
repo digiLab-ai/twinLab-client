@@ -119,10 +119,7 @@ def train_campaign(filepath_or_params, campaign: str, server="cloud", verbose=Fa
         verbose: bool
         debug: bool
     """
-    if server == "cloud":
-        url = utils.TRAIN_CAMPAIGN_CLOUD_URL
-    else:
-        url = utils.get_server_url(server) + "/train_campaign"
+    url = utils.get_train_campaign_url(server)
     headers = utils.construct_standard_headers(debug=debug)
     headers["X-Campaign"] = campaign
     if isinstance(filepath_or_params, str):

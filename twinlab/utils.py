@@ -16,7 +16,7 @@ PARAMS_COERCION = {  # Convert these names in the params file
     "test_train_split": "train_test_split",  # Common mistake
     # "num_train_examples": "train_test_split", # TODO: Think of something better
 }
-TRAIN_CAMPAIGN_CLOUD_URL = "https://4qpjawhm6wlrwe47kigbt2q7j40miizi.lambda-url.eu-west-2.on.aws/"
+TRAIN_CAMPAIGN_CLOUD_URL = "https://cma567qwquixu7bbjcnhbjsxjm0yumvu.lambda-url.eu-west-2.on.aws/"
 TRAIN_CAMPAIGN_STAGE_URL = "https://b7vgjlsn73e7n7kci5rwoxjc7e0pkcqn.lambda-url.eu-west-2.on.aws/"
 
 ### Utility functions ###

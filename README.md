@@ -26,26 +26,22 @@ poetry install
 ## Environment setup
 
 You will need a `.env` file in your project directory that looks like the `.env.example` file in this repository
+```shell
+cp .env.example .env
 ```
-LOCAL_SERVER="http://localhost:3000"
-CLOUD_SERVER="https://26rzbaygu9.execute-api.eu-west-2.amazonaws.com/Prod"
-GROUP_NAME=
-USER_NAME=
-AUTH_TOKEN=
-```
-and fill in your group name, user name, and authorisation token.
+and fill in your twinLab user details.
 
 ## Commands
 
 Testing:
 
-```python
+```shell
 poetry run python scripts/test.py cloud 
 ```
 where `test.py` can be replaced with any of the scripts in the `script` directory.
 
 You need to have a local server for the (private) `twinlab-cloud` repository running for local testing. But local testing can then be run with
-```python
+```shell
 poetry run python scripts/test.py local
 ```
 
@@ -57,7 +53,7 @@ Here we create some mock data (which has a quadratic relationship between `X` an
 import twinlab as tl
 import pandas as pd
 
-# Create a dataframe and upload to twinLab cloud
+# Create a dataset and upload to twinLab cloud
 df = pd.DataFrame({'X': [1, 2, 3, 4], 'y': [1, 4, 9, 16]})
 tl.upload_dataset('test.csv', df)
 
@@ -71,7 +67,7 @@ tl.train_campaign(params, campaign='test')
 
 # Evaluate the model on some unseen data
 df = pd.DataFrame({'X': [1.5, 2.5, 3.5]})
-df_mean, df_std = tl.sample_campaign(df, campaign='test')
+df_mean, df_std = tl.predict_campaign(df, campaign='test')
 ```
 
 ## Notebooks

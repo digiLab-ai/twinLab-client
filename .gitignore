@@ -139,6 +139,7 @@ template.yaml
 
 # Rough working
 notebooks/scrap.ipynb
+scrap.ipynb
 
 # Poetry
 poetry.lock

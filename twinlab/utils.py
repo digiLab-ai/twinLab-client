@@ -1,4 +1,5 @@
 # Standard imports
+import io
 import argparse
 import json
 from pprint import pprint
@@ -10,13 +11,13 @@ import pandas as pd
 # Project imports
 from .settings import ENV
 
-STANDARD_HEADERS = {
-    "X-Group": ENV.GROUP_NAME,
-    "X-User": ENV.USER_NAME,
-    "authorizationToken": ENV.AUTH_TOKEN,
-}
 
+PARAMS_COERCION = {  # Convert these names in the params file
+    "test_train_split": "train_test_split",  # Common mistake
+    # "num_train_examples": "train_test_split", # TODO: Think of something better
+}
 TRAIN_CAMPAIGN_CLOUD_URL = "https://4qpjawhm6wlrwe47kigbt2q7j40miizi.lambda-url.eu-west-2.on.aws/"
+TRAIN_CAMPAIGN_STAGE_URL = "https://b7vgjlsn73e7n7kci5rwoxjc7e0pkcqn.lambda-url.eu-west-2.on.aws/"
 
 ### Utility functions ###
 
@@ -53,39 +54,98 @@ def get_command_line_args() -> argparse.Namespace:
     return args
 
 
+def construct_standard_headers(debug=False) -> dict:
+    headers = {
+        "X-Group": ENV.TWINLAB_GROUPNAME,
+        "X-User": ENV.TWINLAB_USERNAME,
+        "authorizationToken": ENV.TWINLAB_TOKEN,
+        "X-Debug": str(debug).lower(),
+    }
+    return headers
+
+
 def get_server_url(server: str) -> str:
     """
     The URL is the dockerised lambda function that's been set up in cloud by alexander
     """
     if server == "local":
-        baseURL = ENV.LOCAL_SERVER
+        baseURL = ENV.TWINLAB_LOCAL_SERVER
     elif server == "cloud":
-        baseURL = ENV.CLOUD_SERVER
+        baseURL = ENV.TWINLAB_SERVER
+    elif server == "stage":
+        baseURL = ENV.TWINLAB_STAGE_SERVER
     else:
         print("Server:", server)
-        raise ValueError("Server must be either 'local' or 'cloud'")
+        raise ValueError("Server must be either 'local', 'cloud', or 'stage'")
     return baseURL
+
+
+def get_train_campaign_url(server: str) -> str:
+    """
+    Get the URL for the train_campaign lambda function
+    These are different to avoid the AWS Lambda 29s gateway timeout
+    """
+    if server == "cloud":
+        url = TRAIN_CAMPAIGN_CLOUD_URL
+    elif server == "stage":
+        url = TRAIN_CAMPAIGN_STAGE_URL
+    else:
+        url = get_server_url(server) + "/train_campaign"
+    return url
+
+
+def coerce_params_dict(params: dict) -> dict:
+    """
+    Relabel parameters to be consistent with twinLab library
+    """
+    for param in PARAMS_COERCION:
+        if param in params:
+            params[PARAMS_COERCION[param]] = params.pop(param)
+    return params
+
 
 ### ###
 
 ### HTTP requests ###
 
 
-def upload_file_to_presigned_url(file_path: str, presigned_url: str, verbose=False) -> None:
+def upload_file_to_presigned_url(file_path: str, url: str, verbose=False) -> None:
     """
     Upload a file to the specified pre-signed URL.
-
-    :param file_path: The path to the file you want to upload.
-    :param presigned_url: The pre-signed URL generated for uploading the file.
-    :return: True if the upload is successful, False otherwise.
+    params:
+        file_path: str; the path to the local file you want to upload.
+        presigned_url: The pre-signed URL generated for uploading the file.
+        verbose: bool
     """
 
     with open(file_path, "rb") as file:
         headers = {"Content-Type": "application/octet-stream"}
-        response = requests.put(presigned_url, data=file, headers=headers)
+        response = requests.put(url, data=file, headers=headers)
     if verbose:
         if response.status_code == 200:
             print(f"File {file_path} uploaded successfully.")
+        else:
+            print(f"File upload failed")
+            print(f"Status code: {response.status_code}")
+            print(f"Reason: {response.text}")
+        print()
+
+
+def upload_dataframe_to_presigned_url(dataset_name: str, df: pd.DataFrame, url: str, verbose=False) -> None:
+    """
+    Upload a panads dataframe to the specified pre-signed URL.
+    params:
+        df: The pandas dataframe to upload
+        presigned_url: The pre-signed URL generated for uploading the file.
+    """
+    headers = {"Content-Type": "application/octet-stream"}
+    buffer = io.BytesIO()
+    df.to_csv(buffer, index=False)
+    buffer = buffer.getvalue()
+    response = requests.put(url, data=buffer, headers=headers)
+    if verbose:
+        if response.status_code == 200:
+            print(f"Dataframe uploaded successfully.")
         else:
             print(f"File upload failed")
             print(f"Status code: {response.status_code}")
@@ -121,14 +181,6 @@ def print_response_headers(r: requests.Response) -> None:
     print()
 
 
-# def print_response_text(r: requests.Response) -> None:
-#     """
-#     Print response message
-#     """
-#     print("Response:")
-#     for key, value in json.loads(r.text).items():
-#         print(f"{key}: {value}")
-#     print()
 def print_response_message(r: requests.Response) -> None:
     """
     Print response message

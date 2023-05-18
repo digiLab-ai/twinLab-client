@@ -2,5 +2,5 @@
     "filename": "basic.csv",
     "inputs": ["x"],
     "outputs": ["y"],
-    "train_test_split": 10
+    "test_train_split": 10
 }

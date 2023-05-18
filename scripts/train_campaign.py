@@ -10,4 +10,4 @@ with open(params_file, "r") as f:
     params = json.load(f)
 campaign = "biscuits"
 server = tl.get_command_line_args().server
-tl.train_campaign(params, campaign, server, verbose=True)
+tl.train_campaign(params, campaign, server=server, verbose=True, debug=True)

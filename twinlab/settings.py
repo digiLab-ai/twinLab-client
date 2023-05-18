@@ -1,12 +1,17 @@
+# Standard imports
+from typing import Optional
+
+# Third-party imports
 from pydantic import BaseSettings
 
 
 class Environment(BaseSettings):
-    LOCAL_SERVER: str
-    CLOUD_SERVER: str
-    GROUP_NAME: str
-    USER_NAME: str
-    AUTH_TOKEN: str
+    TWINLAB_LOCAL_SERVER: Optional[str]
+    TWINLAB_STAGE_SERVER: Optional[str]
+    TWINLAB_SERVER: str
+    TWINLAB_GROUPNAME: str
+    TWINLAB_USERNAME: str
+    TWINLAB_TOKEN: str
 
     class Config:
         env_prefix = ""
@@ -19,10 +24,9 @@ ENV = Environment()
 
 print(
     f"""
-      == Client Initialisation ==
-      Local Server  : {ENV.LOCAL_SERVER}
-      Cloud Server  : {ENV.CLOUD_SERVER}
-      Group Name    : {ENV.GROUP_NAME}
-      User Name     : {ENV.USER_NAME}
+      == TwinLab Client Initialisation ==
+      Server  : {ENV.TWINLAB_SERVER}
+      Group   : {ENV.TWINLAB_GROUPNAME}
+      User    : {ENV.TWINLAB_USERNAME}
       """
 )

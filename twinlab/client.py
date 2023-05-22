@@ -128,7 +128,7 @@ def delete_dataset(dataset_name: str, server="cloud", verbose=False, debug=False
 ### Campaign functions ###
 
 
-def train_campaign(filepath_or_params, campaign: str, server="cloud", verbose=False, debug=False) -> None:
+def train_campaign(filepath_or_params: Union[str, dict], campaign: str, server="cloud", verbose=False, debug=False) -> None:
     """
     Train a campaign remotely using twinLab
     params:

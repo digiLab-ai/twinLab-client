@@ -47,8 +47,9 @@ def get_command_line_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "server",
-        default=False,
-        help="specify whether to use local or cloud lambda function",
+        default="cloud",
+        nargs='?',
+        help="Specify whether to use local or cloud lambda function",
     )
     args = parser.parse_args()
     return args
@@ -70,10 +71,10 @@ def get_server_url(server: str) -> str:
     """
     if server == "local":
         baseURL = ENV.TWINLAB_LOCAL_SERVER
-    elif server == "cloud":
-        baseURL = ENV.TWINLAB_SERVER
     elif server == "stage":
         baseURL = ENV.TWINLAB_STAGE_SERVER
+    elif server == "cloud":
+        baseURL = ENV.TWINLAB_SERVER
     else:
         print("Server:", server)
         raise ValueError("Server must be either 'local', 'cloud', or 'stage'")

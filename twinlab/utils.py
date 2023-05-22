@@ -78,6 +78,8 @@ def get_server_url(server: str) -> str:
     else:
         print("Server:", server)
         raise ValueError("Server must be either 'local', 'cloud', or 'stage'")
+    if baseURL is None:  # Catch if the server URL has not been set
+        raise ValueError("Server URL not set")
     return baseURL
 
 

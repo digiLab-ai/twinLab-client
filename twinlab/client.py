@@ -2,6 +2,7 @@
 import io
 import json
 from pprint import pprint
+from typing import Union
 
 # Third-party imports
 import requests
@@ -13,35 +14,50 @@ from . import utils
 ### Dataset functions ###
 
 
-def upload_dataset(dataset_filepath: str, df=None, server="cloud", verbose=False, debug=False) -> None:
+def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, server="cloud", verbose=False, debug=False) -> None:
     """
     Upload a dataset to the cloud so that it can be queried and used for training
     params:
-        dataset_filepath: str; location of csv dataset on local machine
-        dt: None or pd.DataFrame; if None, then dataset_filepath is used to load the dataframe
+        filepath_or_df: str; location of csv dataset on local machine or pandas dataframe
+        dataset_name: str; name of dataset on S3 (same as the uploaded file name if file)
         server: str; either "cloud" or "local"
         verbose: bool
         debug: bool
     """
+
+    # Sort out dataset_name
+    if dataset_name is None:
+        if type(filepath_or_df) == str:
+            dataset_name = filepath_or_df
+        else:
+            raise ValueError("Name must be specified if uploading dataframe")
+    else:
+        if "/" in dataset_name:
+            raise ValueError("Dataset name cannot contain '/'")
+
+    # Get the upload URL
     headers = utils.construct_standard_headers(debug=debug)
-    headers["X-Dataset"] = dataset_filepath
+    headers["X-Dataset"] = dataset_name
     lambda_url = utils.get_server_url(server) + "/generate_upload_url"
     r = requests.get(lambda_url, headers=headers)
     utils.check_response(r)
+
+    # Upload the file
     if verbose:
         utils.print_response_message(r)
     upload_url = r.json()["url"]
-    if df is None:
+    if type(filepath_or_df) is str:
+        filepath = filepath_or_df
         utils.upload_file_to_presigned_url(
-            dataset_filepath, upload_url, verbose=verbose)
+            filepath, upload_url, verbose=verbose)
     else:
-        dataset_name = dataset_filepath
-        if "/" in dataset_name:
-            raise ValueError("Dataset name cannot contain '/'")
+        df = filepath_or_df
         utils.upload_dataframe_to_presigned_url(dataset_name,
                                                 df, upload_url, verbose=verbose)
     if verbose:
-        print(f"Uploading {dataset_filepath}")
+        print(f"Uploading {dataset_name}")
+
+    # Process the uploaded dataset remotely
     process_url = utils.get_server_url(server) + "/process_uploaded_dataset"
     r = requests.post(process_url, headers=headers)
     if verbose:
@@ -69,7 +85,7 @@ def query_dataset(dataset_name: str, server="cloud", verbose=False, debug=False)
     return df
 
 
-def list_datasets(server="cloud", verbose=False, debug=False) -> list:
+def list_datasets(server="cloud", verbose=False, debug=False) -> Union[list, None]:
     """
     List datasets that have been uploaded to the cloud
     params:
@@ -83,8 +99,11 @@ def list_datasets(server="cloud", verbose=False, debug=False) -> list:
     utils.check_response(r)
     if verbose:
         utils.print_response_message(r)
-    response = r.json()
-    return response["datasets"]
+    datasets = r.json()["datasets"]
+    if verbose and datasets:
+        print("Datasets:")
+        pprint(datasets)
+    return datasets
 
 
 def delete_dataset(dataset_name: str, server="cloud", verbose=False, debug=False) -> None:
@@ -157,7 +176,7 @@ def query_campaign(campaign_name: str, server="cloud", verbose=False, debug=Fals
     return metadata
 
 
-def list_campaigns(server="cloud", verbose=False, debug=False) -> list:
+def list_campaigns(server="cloud", verbose=False, debug=False) -> Union[list, None]:
     """
     List all trained campaigns stored in cloud
     params:
@@ -171,8 +190,11 @@ def list_campaigns(server="cloud", verbose=False, debug=False) -> list:
     utils.check_response(r)
     if verbose:
         utils.print_response_message(r)
-    response = r.json()
-    return response["campaigns"]
+    campaigns = r.json()["campaigns"]
+    if verbose and campaigns:
+        print("Campaigns:")
+        pprint(campaigns)
+    return campaigns
 
 
 def predict_campaign(

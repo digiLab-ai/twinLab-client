@@ -55,7 +55,7 @@ import pandas as pd
 
 # Create a dataset and upload to twinLab cloud
 df = pd.DataFrame({'X': [1, 2, 3, 4], 'y': [1, 4, 9, 16]})
-tl.upload_dataset('test.csv', df)
+tl.upload_dataset(df, 'test.csv')
 
 # Train a machine-learning model for the data
 params = {

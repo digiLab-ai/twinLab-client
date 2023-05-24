@@ -1,4 +1,7 @@
 # Standard imports
+import os
+
+# Third-party imports
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -13,8 +16,8 @@ noise = 0.1
 n = 10
 datasets_dir = "datasets"
 campaign_dir = "campaigns/basic"
-train_file = datasets_dir+"/basic.csv"
-eval_file = campaign_dir+"/eval.csv"
+train_file = os.path.join(datasets_dir, "basic.csv")
+eval_file = os.path.join(campaign_dir, "eval.csv")
 seed = 123
 
 # Calculations

@@ -36,14 +36,9 @@ and fill in your twinLab user details.
 Testing:
 
 ```shell
-poetry run python scripts/test.py cloud 
+poetry run python scripts/test.py
 ```
 where `test.py` can be replaced with any of the scripts in the `script` directory.
-
-You need to have a local server for the (private) `twinlab-cloud` repository running for local testing. But local testing can then be run with
-```shell
-poetry run python scripts/test.py local
-```
 
 ## Example
 

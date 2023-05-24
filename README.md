@@ -36,7 +36,7 @@ and fill in your `twinLab` user details.
 Testing:
 
 ```shell
-poetry run python scripts/test.py
+poetry run python scripts/test.py cloud
 ```
 where `test.py` can be replaced with any of the scripts in the `script` directory.
 

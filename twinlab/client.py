@@ -32,8 +32,8 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, 
         else:
             raise ValueError("Name must be specified if uploading dataframe")
     else:
-        if "/" in dataset_name:
-            raise ValueError("Dataset name cannot contain '/'")
+        if ("/" in dataset_name) or ("\\" in dataset_name):
+            raise ValueError("Dataset name cannot contain '/' or '\\'")
 
     # Get the upload URL
     headers = utils.construct_standard_headers(debug=debug)

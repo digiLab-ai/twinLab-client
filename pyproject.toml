@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "twinlab"
-version = "1.1.1"
+version = "1.1.2"
 description = "Client interface for twinLab machine-learning in the cloud."
 license = "MIT"
 homepage = "https://www.digilab.co.uk/"

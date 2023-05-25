@@ -7,6 +7,7 @@ from pydantic import BaseSettings
 
 class Environment(BaseSettings):
     TWINLAB_LOCAL_SERVER: Optional[str]
+    TWINLAB_DEV_SERVER: Optional[str]
     TWINLAB_STAGE_SERVER: Optional[str]
     TWINLAB_SERVER: str
     TWINLAB_GROUPNAME: str

@@ -36,7 +36,7 @@ and fill in your `twinLab` user details.
 Testing:
 
 ```shell
-poetry run python scripts/test.py cloud
+poetry run python scripts/test.py
 ```
 where `test.py` can be replaced with any of the scripts in the `script` directory.
 
@@ -50,7 +50,7 @@ import pandas as pd
 
 # Create a dataset and upload to the twinLab cloud
 df = pd.DataFrame({'X': [1, 2, 3, 4], 'y': [1, 4, 9, 16]})
-tl.upload_dataset('test.csv', df)
+tl.upload_dataset(df, 'test.csv')
 
 # Train a machine-learning model for the data
 params = {

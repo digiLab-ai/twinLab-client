@@ -1,5 +1,6 @@
 # Standard imports
 import io
+import os
 import argparse
 import json
 from pprint import pprint
@@ -101,7 +102,7 @@ def get_train_campaign_url(server: str) -> str:
     elif server == "cloud":
         url = TRAIN_CAMPAIGN_CLOUD_URL
     else:
-        url = get_server_url(server) + "/train_campaign"
+        url = os.path.join(get_server_url(server), "train_campaign")
     return url
 
 

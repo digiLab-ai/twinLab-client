@@ -1,11 +1,12 @@
 # Standard import
+import os
 import json
 
 # Project imports
 import twinlab as tl
 
 print()  #  Initial white space
-params_file = "campaigns/biscuits/params.json"
+params_file = os.path.join("campaigns", "biscuits", "params.json")
 with open(params_file, "r") as f:
     params = json.load(f)
 campaign = "biscuits"

@@ -15,7 +15,7 @@ def f(x): return np.sin(2.*np.pi*x)
 noise = 0.1
 n = 10
 datasets_dir = "datasets"
-campaign_dir = "campaigns/basic"
+campaign_dir = os.path.join("campaigns", "basic")
 train_file = os.path.join(datasets_dir, "basic.csv")
 eval_file = os.path.join(campaign_dir, "eval.csv")
 seed = 123

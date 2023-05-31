@@ -1,13 +1,17 @@
+# Standard imports
+import os
+
+# Third-party imports
 import numpy as np
 import pandas as pd
 
 # Parameters
 seed = 123
 n_small = 400
-infile = "datasets/ukaea.csv"
-outfile_small = "datasets/ukaea_small.csv"
+infile = os.path.join("datasets", "ukaea.csv")
+outfile_small = os.path.join("datasets", "ukaea_small.csv")
 n_test = 5
-outfile_test = "campaigns/ukaea/test.csv"
+outfile_test = os.path.join("campaigns", "ukaea", "test.csv")
 
 # Set random seed
 np.random.seed(seed)

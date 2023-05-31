@@ -1,4 +1,5 @@
 # Standard imports
+import os
 import json
 
 # Project imports
@@ -7,10 +8,10 @@ import twinlab as tl
 # Parameters
 dataset_directory = "datasets"
 dataset_filename = "biscuits.csv"
-campaign_directory = "campaigns/biscuits"
-training_filepath = dataset_directory+"/"+dataset_filename
-params_filepath = campaign_directory+"/params.json"
-eval_filepath = campaign_directory+"/eval.csv"
+campaign_directory = os.path.join("campaigns", "biscuits")
+training_filepath = os.path.join(dataset_directory, dataset_filename)
+params_filepath = os.path.join(campaign_directory, "params.json")
+eval_filepath = os.path.join(campaign_directory, "eval.csv")
 campaign_name = "biscuits"
 verbose = True
 debug = False

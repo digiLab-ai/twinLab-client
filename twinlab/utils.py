@@ -142,7 +142,7 @@ def upload_file_to_presigned_url(file_path: str, url: str, verbose=False) -> Non
         print()
 
 
-def upload_dataframe_to_presigned_url(dataset_name: str, df: pd.DataFrame, url: str, verbose=False) -> None:
+def upload_dataframe_to_presigned_url(df: pd.DataFrame, url: str, verbose=False) -> None:
     """
     Upload a panads dataframe to the specified pre-signed URL.
     params:

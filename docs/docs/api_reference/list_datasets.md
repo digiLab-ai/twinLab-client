@@ -1,17 +1,28 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 # List datasets
 
-List all datasets owned by the user.
+List datasets that have been uploaded to the `twinLab` cloud.
 
 **NOTE:** Your user information is automatically added to the request using the `.env` file.
+
+## Arguments
+
+- `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
+- `verbose`: `bool`
+- `debug`: `bool`
+
+## Returns
+
+A list of `str` dataset names, or `None` if there are no datasets
 
 ## Example
 
 ```python
-import twinlab_client as tl
+import twinlab as tl
 
-tl.list_datasets(server, verbose=True)
+datasets = tl.list_datasets()
+print(datasets)
 ```

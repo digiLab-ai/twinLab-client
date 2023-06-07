@@ -2,6 +2,6 @@
 import twinlab as tl
 
 print()  #  Initial white space
-campaign = "biscuits"
+campaign_name = "biscuits"
 server = tl.get_command_line_args().server
-tl.query_campaign(campaign, server=server, verbose=True, debug=True)
+tl.query_campaign(campaign_name, server=server, verbose=True, debug=True)

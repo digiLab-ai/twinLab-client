@@ -58,11 +58,11 @@ params = {
     'inputs': ['X'],
     'outputs': ['y'],
 }
-tl.train_campaign(params, campaign='test')
+tl.train_campaign(params, campaign_name='test')
 
 # Evaluate the model on some unseen data
 df = pd.DataFrame({'X': [1.5, 2.5, 3.5]})
-df_mean, df_std = tl.predict_campaign(df, campaign='test')
+df_mean, df_std = tl.predict_campaign(df, campaign_name='test')
 ```
 
 ## Notebooks
@@ -74,5 +74,5 @@ Check out the `notebooks` directory for some additional examples to get started!
 See the live documentation at https://digilab-ai.github.io/twinLab-client/. Or build a copy locally:
 ```shell
 cd docs
-yarn start
+yarn install && yarn start
 ```

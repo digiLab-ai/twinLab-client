@@ -2,6 +2,6 @@
 import twinlab as tl
 
 print()  #  Initial white space
-dataset = "biscuits.csv"
+dataset_name = "biscuits.csv"
 server = tl.get_command_line_args().server
-tl.query_dataset(dataset, server=server, verbose=True, debug=True)
+tl.query_dataset(dataset_name, server=server, verbose=True, debug=True)

@@ -4,28 +4,30 @@ sidebar_position: 4
 
 # Train campaign
 
-Train a new emulator.
+Train a campaign in the `twinLab` cloud.
 
 **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
 ## Arguments
-
-| Name       | Type   | Description            |
-| ---------- | ------ | ---------------------- |
-| `params`   | dict   | Emulator configuration |
-| `campaign` | string | Campaign label         |
-
-**NOTE:** Data must be a CSV file.
+- `filepath_or_params`: `str` | `dict`; filepath to local json or parameters dictionary for training
+- `campaign_name`: `str`; name for the final trained model
+- `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
+- `verbose`: `bool`
+- `debug`: `bool`
 
 ## Example
 
+Train using a local `json` parameters file:
 ```python
-import json
-import twinlab_client as tl
+tl.train_campaign("params.json", "my_campaign", verbose=True)
+```
 
-params_file = "resources/data/my_params.json"
-with open(params_file, "r") as f:
-    params = json.load(f)
-campaign = "my_campaign"
-tl.train_campaign(params, campaign)
+Train via a `python` dictionary:
+```python
+params = {
+    "dataset": "my_dataset",
+    "inputs": ["X1", "X2"],
+    "outputs": ["y1", "y2"],
+}
+tl.train_campaign(params, "my_campaign", verbose=True)
 ```

@@ -1,23 +1,23 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 ---
 
-# Delete datasets
+# Delete campaign
 
-Remove a campaign owned by the user.
+Delete campaign from the `twinLab` cloud.
 
 **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
 ## Arguments
-
-| Name       | Type   | Description    |
-| ---------- | ------ | -------------- |
-| `campaign` | string | Campaign label |
+- `campaign_name`: `str`; name of trained model to delete from the cloud
+- `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
+- `verbose`: `bool`
+- `debug`: `bool`
 
 ## Example
 
 ```python
-import twinlab_client as tl
+import twinlab as tl
 
 campaign = "my_campaign"
 tl.delete_campaign(campaign)

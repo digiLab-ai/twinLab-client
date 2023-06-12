@@ -1,1 +1,5 @@
-__version__ = "1.1.3"
+# Standard imports
+import pkg_resources
+
+# Get the version number
+__version__ = pkg_resources.get_distribution('twinlab').version

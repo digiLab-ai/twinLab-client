@@ -10,11 +10,12 @@ import pandas as pd
 
 # Project imports
 from . import utils
+from .settings import ENV
 
 ### Dataset functions ###
 
 
-def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, server="cloud", verbose=False, debug=False) -> None:
+def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, verbose=False, debug=False) -> None:
     """
     # Upload dataset
 
@@ -23,10 +24,8 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, 
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `filepath_or_df`: `str` | `Dataframe`; location of csv dataset on local machine or `pandas` dataframe
     - `dataset_name`: `str`; name for the dataset when saved to the twinLab cloud
-    - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -69,7 +68,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, 
     # Get the upload URL
     headers = utils.construct_standard_headers(debug=debug)
     headers["X-Dataset"] = dataset_name
-    lambda_url = utils.get_server_url(server) + "/generate_upload_url"
+    lambda_url = ENV.TWINLAB_SERVER + "/generate_upload_url"
     r = requests.get(lambda_url, headers=headers)
     utils.check_response(r)
 
@@ -89,13 +88,13 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, 
         print(f"Uploading {dataset_name}")
 
     # Process the uploaded dataset remotely
-    process_url = utils.get_server_url(server) + "/process_uploaded_dataset"
+    process_url = ENV.TWINLAB_SERVER + "/process_uploaded_dataset"
     r = requests.post(process_url, headers=headers)
     if verbose:
         utils.print_response_message(r)
 
 
-def query_dataset(dataset_name: str, server="cloud", verbose=False, debug=False) -> pd.DataFrame:
+def query_dataset(dataset_name: str, verbose=False, debug=False) -> pd.DataFrame:
     """
     # Query dataset
 
@@ -104,9 +103,7 @@ def query_dataset(dataset_name: str, server="cloud", verbose=False, debug=False)
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `dataset_name`: `str`; name of dataset on S3 (same as the uploaded file name)
-    - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -124,7 +121,7 @@ def query_dataset(dataset_name: str, server="cloud", verbose=False, debug=False)
     print(df)
     ```
     """
-    url = utils.get_server_url(server) + "/query_dataset"
+    url = ENV.TWINLAB_SERVER + "/query_dataset"
     headers = utils.construct_standard_headers(debug=debug)
     headers["X-Dataset"] = dataset_name
     r = requests.get(url, headers=headers)
@@ -136,7 +133,7 @@ def query_dataset(dataset_name: str, server="cloud", verbose=False, debug=False)
     return df
 
 
-def list_datasets(server="cloud", verbose=False, debug=False) -> Union[list, None]:
+def list_datasets(verbose=False, debug=False) -> Union[list, None]:
     """
     # List datasets
 
@@ -145,8 +142,6 @@ def list_datasets(server="cloud", verbose=False, debug=False) -> Union[list, Non
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
-    - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -159,7 +154,7 @@ def list_datasets(server="cloud", verbose=False, debug=False) -> Union[list, Non
     print(datasets)
     ```
     """
-    url = utils.get_server_url(server) + "/list_datasets"
+    url = ENV.TWINLAB_SERVER + "/list_datasets"
     headers = utils.construct_standard_headers(debug=debug)
     r = requests.get(url, headers=headers)
     utils.check_response(r)
@@ -172,7 +167,7 @@ def list_datasets(server="cloud", verbose=False, debug=False) -> Union[list, Non
     return datasets
 
 
-def delete_dataset(dataset_name: str, server="cloud", verbose=False, debug=False) -> None:
+def delete_dataset(dataset_name: str, verbose=False, debug=False) -> None:
     """
     # Delete dataset
 
@@ -182,7 +177,6 @@ def delete_dataset(dataset_name: str, server="cloud", verbose=False, debug=False
 
     ## Arguments
     - `dataset_name`: `str`; name of dataset to delete from the cloud
-    - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -195,7 +189,7 @@ def delete_dataset(dataset_name: str, server="cloud", verbose=False, debug=False
     tl.delete_dataset(dataset_name)
     ```
     """
-    url = utils.get_server_url(server) + "/delete_dataset"
+    url = ENV.TWINLAB_SERVER + "/delete_dataset"
     headers = utils.construct_standard_headers(debug=debug)
     headers["X-Dataset"] = dataset_name
     r = requests.post(url, headers=headers)
@@ -208,7 +202,7 @@ def delete_dataset(dataset_name: str, server="cloud", verbose=False, debug=False
 ### Campaign functions ###
 
 
-def train_campaign(filepath_or_params: Union[str, dict], campaign_name: str, server="cloud", verbose=False, debug=False) -> None:
+def train_campaign(filepath_or_params: Union[str, dict], campaign_name: str, verbose=False, debug=False) -> None:
     """
     # Train campaign
 
@@ -219,7 +213,6 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_name: str, ser
     ## Arguments
     - `filepath_or_params`: `str` | `dict`; filepath to local json or parameters dictionary for training
     - `campaign_name`: `str`; name for the final trained model
-    - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -240,8 +233,9 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_name: str, ser
     tl.train_campaign(params, "my_campaign", verbose=True)
 ```
     """
-    url = utils.get_server_url(server)+"/train_campaign"
-    url = utils.get_train_campaign_url(url)
+    long_training_server = ENV.TWINLAB_TRAINING_SERVER
+    training_server = ENV.TWINLAB_SERVER + "/train_campaign"
+    url = long_training_server if long_training_server else training_server
     headers = utils.construct_standard_headers(debug=debug)
     headers["X-Campaign"] = campaign_name
     if isinstance(filepath_or_params, str):
@@ -257,7 +251,7 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_name: str, ser
         utils.print_response_message(r)
 
 
-def query_campaign(campaign_name: str, server="cloud", verbose=False, debug=False) -> dict:
+def query_campaign(campaign_name: str, verbose=False, debug=False) -> dict:
     """
     # Query campaign
 
@@ -266,9 +260,7 @@ def query_campaign(campaign_name: str, server="cloud", verbose=False, debug=Fals
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `campaign_name`: `str`; name of trained model to query
-    - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -285,7 +277,7 @@ def query_campaign(campaign_name: str, server="cloud", verbose=False, debug=Fals
     tl.query_campaign(campaign)
     ```
     """
-    url = utils.get_server_url(server) + "/query_campaign"
+    url = ENV.TWINLAB_SERVER + "/query_campaign"
     headers = utils.construct_standard_headers(debug=debug)
     headers["X-Campaign"] = campaign_name
     r = requests.get(url, headers=headers)
@@ -298,7 +290,7 @@ def query_campaign(campaign_name: str, server="cloud", verbose=False, debug=Fals
     return metadata
 
 
-def list_campaigns(server="cloud", verbose=False, debug=False) -> Union[list, None]:
+def list_campaigns(verbose=False, debug=False) -> Union[list, None]:
     """
     # List datasets
 
@@ -307,8 +299,6 @@ def list_campaigns(server="cloud", verbose=False, debug=False) -> Union[list, No
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
-    - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -325,7 +315,7 @@ def list_campaigns(server="cloud", verbose=False, debug=False) -> Union[list, No
     print(datasets)
     ```
     """
-    url = utils.get_server_url(server) + "/list_campaigns"
+    url = ENV.TWINLAB_SERVER + "/list_campaigns"
     headers = utils.construct_standard_headers(debug=debug)
     r = requests.get(url, headers=headers)
     utils.check_response(r)
@@ -339,7 +329,7 @@ def list_campaigns(server="cloud", verbose=False, debug=False) -> Union[list, No
 
 
 def predict_campaign(
-    filepath_or_df: Union[str, pd.DataFrame], campaign_name: str, server="cloud", verbose=False, debug=False
+    filepath_or_df: Union[str, pd.DataFrame], campaign_name: str, verbose=False, debug=False
 ) -> tuple:
     """
     # Predict campaign
@@ -349,10 +339,8 @@ def predict_campaign(
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `filepath_or_df`: `str`; location of csv dataset on local machine for evaluation or `pandas` dataframe
     - `campaign_name`: `str`; name of pre-trained model to use for predictions
-    - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -385,7 +373,7 @@ def predict_campaign(
     tl.upload_dataset(df, campaign_name)
     ```
     """
-    url = utils.get_server_url(server) + "/predict_campaign"
+    url = ENV.TWINLAB_SERVER + "/predict_campaign"
     if isinstance(filepath_or_df, pd.DataFrame):  # Data frames
         buffer = io.BytesIO()
         filepath_or_df.to_csv(buffer, index=False)
@@ -407,7 +395,7 @@ def predict_campaign(
     return df_mean, df_std
 
 
-def delete_campaign(campaign_name: str, server="cloud", verbose=False, debug=False) -> None:
+def delete_campaign(campaign_name: str, verbose=False, debug=False) -> None:
     """
     # Delete campaign
 
@@ -417,7 +405,6 @@ def delete_campaign(campaign_name: str, server="cloud", verbose=False, debug=Fal
 
     ## Arguments
     - `campaign_name`: `str`; name of trained model to delete from the cloud
-    - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -430,7 +417,7 @@ def delete_campaign(campaign_name: str, server="cloud", verbose=False, debug=Fal
     tl.delete_campaign(campaign)
     ```
     """
-    url = utils.get_server_url(server) + "/delete_campaign"
+    url = ENV.TWINLAB_SERVER + "/delete_campaign"
     headers = utils.construct_standard_headers(debug=debug)
     headers["X-Campaign"] = campaign_name
     r = requests.post(url, headers=headers)

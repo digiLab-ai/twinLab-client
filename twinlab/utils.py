@@ -18,23 +18,6 @@ PARAMS_COERCION = {  # Convert these names in the params file
     "dataset": "filename",
 }
 
-# twinLab server URLs TODO: These should not be hard-coded
-TWINLAB_DEV_SERVER = "https://mt9w8ln59j.execute-api.eu-west-2.amazonaws.com/dev"
-TWINLAB_SERVER = "https://4b7lweoe60.execute-api.eu-west-2.amazonaws.com/stage"
-TWINLAB_STAGE_SERVER = "https://qisuqloa39.execute-api.eu-west-2.amazonaws.com/prod"
-
-# Train campaign server URLs TODO: Move these to .env?
-TRAIN_DEV_SERVER = "https://pdersvjxmgrkqojwyeyocqm7le0iwtkx.lambda-url.eu-west-2.on.aws/"
-TRAIN_STAGE_SERVER = "https://b7vgjlsn73e7n7kci5rwoxjc7e0pkcqn.lambda-url.eu-west-2.on.aws/"
-TRAIN_SERVER = "https://cma567qwquixu7bbjcnhbjsxjm0yumvu.lambda-url.eu-west-2.on.aws/"
-
-# Mapping
-TRAIN_URLS = {
-    TWINLAB_DEV_SERVER: TRAIN_DEV_SERVER,
-    TWINLAB_STAGE_SERVER: TRAIN_STAGE_SERVER,
-    TWINLAB_SERVER: TRAIN_SERVER,
-}
-
 
 ### Utility functions ###
 
@@ -80,42 +63,6 @@ def construct_standard_headers(debug=False) -> dict:
         "X-Debug": str(debug).lower(),
     }
     return headers
-
-
-def get_server_url(server: str) -> str:
-    """
-    The URL is the dockerised lambda function that's been set up in cloud by alexander
-    """
-    if server == "local":
-        baseURL = ENV.TWINLAB_LOCAL_SERVER
-    elif server == "dev":
-        baseURL = ENV.TWINLAB_DEV_SERVER
-    elif server == "stage":
-        baseURL = ENV.TWINLAB_STAGE_SERVER
-    elif server == "cloud":
-        baseURL = ENV.TWINLAB_SERVER
-    else:
-        print("Server:", server)
-        raise ValueError(
-            "Server must be either 'local', 'dev', 'stage', or 'cloud'")
-    if baseURL is None:  # Catch if the server URL has not been set
-        raise ValueError("Server URL not set")
-    return baseURL
-
-
-def get_train_campaign_url(server_url: str) -> str:
-    """
-    Get the URL for the train_campaign lambda function
-    These are different to avoid the AWS Lambda 29s gateway timeout
-    """
-    # if server == "dev":
-    #     url = TRAIN_CAMPAIGN_DEV_URL
-    # elif server == "stage":
-    #     url = TRAIN_CAMPAIGN_STAGE_URL
-    # elif server == "cloud":
-    #     url = TRAIN_CAMPAIGN_CLOUD_URL
-    url = TRAIN_URLS[server_url] if server_url in TRAIN_URLS else server_url
-    return url
 
 
 def coerce_params_dict(params: dict) -> dict:

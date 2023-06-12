@@ -17,17 +17,16 @@ verbose = True
 debug = False
 
 print()  #  Initial white space
-server = tl.get_command_line_args().server
-tl.upload_dataset(training_filepath, server=server,
+tl.upload_dataset(training_filepath,
                   verbose=verbose, debug=debug)
-tl.query_dataset(dataset_name, server=server, verbose=verbose, debug=debug)
-tl.list_datasets(server=server, verbose=verbose, debug=debug)
-tl.train_campaign(params_filepath, campaign_name, server=server,
+tl.query_dataset(dataset_name, verbose=verbose, debug=debug)
+tl.list_datasets(verbose=verbose, debug=debug)
+tl.train_campaign(params_filepath, campaign_name,
                   verbose=verbose, debug=debug)
-tl.query_campaign(campaign_name, server=server, verbose=verbose, debug=debug)
-tl.list_campaigns(server=server, verbose=verbose, debug=debug)
+tl.query_campaign(campaign_name, verbose=verbose, debug=debug)
+tl.list_campaigns(verbose=verbose, debug=debug)
 tl.predict_campaign(eval_filepath, campaign_name,
-                    server=server, verbose=verbose, debug=debug)
-tl.delete_campaign(campaign_name, server=server, verbose=verbose, debug=debug)
-tl.delete_dataset(dataset_name, server=server,
+                    verbose=verbose, debug=debug)
+tl.delete_campaign(campaign_name, verbose=verbose, debug=debug)
+tl.delete_dataset(dataset_name,
                   verbose=verbose, debug=debug)

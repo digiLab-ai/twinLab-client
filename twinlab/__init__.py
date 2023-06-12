@@ -1,5 +1,5 @@
 # Version
-from .version import __version__
+from ._version import __version__
 
 # Utility functions
 from .utils import get_command_line_args

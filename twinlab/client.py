@@ -23,7 +23,6 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, 
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `filepath_or_df`: `str` | `Dataframe`; location of csv dataset on local machine or `pandas` dataframe
     - `dataset_name`: `str`; name for the dataset when saved to the twinLab cloud
     - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
@@ -104,7 +103,6 @@ def query_dataset(dataset_name: str, server="cloud", verbose=False, debug=False)
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `dataset_name`: `str`; name of dataset on S3 (same as the uploaded file name)
     - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
@@ -145,7 +143,6 @@ def list_datasets(server="cloud", verbose=False, debug=False) -> Union[list, Non
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
@@ -266,7 +263,6 @@ def query_campaign(campaign_name: str, server="cloud", verbose=False, debug=Fals
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `campaign_name`: `str`; name of trained model to query
     - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
@@ -307,7 +303,6 @@ def list_campaigns(server="cloud", verbose=False, debug=False) -> Union[list, No
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
@@ -349,7 +344,6 @@ def predict_campaign(
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
-
     - `filepath_or_df`: `str`; location of csv dataset on local machine for evaluation or `pandas` dataframe
     - `campaign_name`: `str`; name of pre-trained model to use for predictions
     - `server`: `str`; {`"local"`, `"dev"`, `"stage"`, `"cloud"`}

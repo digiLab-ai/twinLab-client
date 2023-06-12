@@ -6,6 +6,7 @@ from pydantic import BaseSettings
 
 
 class Environment(BaseSettings):
+    # TODO: Add train URL?
     TWINLAB_LOCAL_SERVER: Optional[str]
     TWINLAB_DEV_SERVER: Optional[str]
     TWINLAB_STAGE_SERVER: Optional[str]

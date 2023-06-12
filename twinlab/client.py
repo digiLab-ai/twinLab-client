@@ -240,7 +240,8 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_name: str, ser
     tl.train_campaign(params, "my_campaign", verbose=True)
 ```
     """
-    url = utils.get_train_campaign_url(server)
+    url = utils.get_server_url(server)+"/train_campaign"
+    url = utils.get_train_campaign_url(url)
     headers = utils.construct_standard_headers(debug=debug)
     headers["X-Campaign"] = campaign_name
     if isinstance(filepath_or_params, str):
@@ -384,8 +385,7 @@ def predict_campaign(
     tl.upload_dataset(df, campaign_name)
     ```
     """
-    url = utils.get_server_url(
-        server) + "/predict_campaign"
+    url = utils.get_server_url(server) + "/predict_campaign"
     if isinstance(filepath_or_df, pd.DataFrame):  # Data frames
         buffer = io.BytesIO()
         filepath_or_df.to_csv(buffer, index=False)

@@ -1,6 +1,5 @@
 # Standard import
 import os
-import json
 
 # Project imports
 import twinlab as tl

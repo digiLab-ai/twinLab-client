@@ -16,7 +16,7 @@ Most users should use `pip`
 pip install twinlab
 ```
 
-If you want to modify the client-side code, or have a local installation for some reason
+If you want to modify the client-side code, or have a local installation, you will need to have `git`, `poetry`, and a `python` version of `3.9` or higher installed. Then you can do:
 ```shell
 git clone https://github.com/digiLab-ai/twinLab-client.git
 cd twinlab-client
@@ -29,7 +29,7 @@ You will need a `.env` file in your project directory that looks like the `.env.
 ```shell
 cp .env.example .env
 ```
-and fill in your twinLab user details.
+and fill in your `twinLab` user details.
 
 ## Commands
 
@@ -48,7 +48,7 @@ Here we create some mock data (which has a quadratic relationship between `X` an
 import twinlab as tl
 import pandas as pd
 
-# Create a dataset and upload to twinLab cloud
+# Create a dataset and upload to the twinLab cloud
 df = pd.DataFrame({'X': [1, 2, 3, 4], 'y': [1, 4, 9, 16]})
 tl.upload_dataset(df, 'test.csv')
 

@@ -24,6 +24,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, 
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
+
     - `filepath_or_df`: `str` | `Dataframe`; location of csv dataset on local machine or `pandas` dataframe
     - `dataset_name`: `str`; name for the dataset when saved to the twinLab cloud
     - `verbose`: `bool` determining level of information returned to the user
@@ -103,6 +104,7 @@ def query_dataset(dataset_name: str, verbose=False, debug=False) -> pd.DataFrame
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
+
     - `dataset_name`: `str`; name of dataset on S3 (same as the uploaded file name)
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
@@ -142,6 +144,7 @@ def list_datasets(verbose=False, debug=False) -> Union[list, None]:
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
+
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -176,6 +179,7 @@ def delete_dataset(dataset_name: str, verbose=False, debug=False) -> None:
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
+
     - `dataset_name`: `str`; name of dataset to delete from the cloud
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
@@ -211,6 +215,7 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_name: str, ver
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
+
     - `filepath_or_params`: `str` | `dict`; filepath to local json or parameters dictionary for training
     - `campaign_name`: `str`; name for the final trained model
     - `verbose`: `bool` determining level of information returned to the user
@@ -231,7 +236,7 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_name: str, ver
         "outputs": ["y1", "y2"],
     }
     tl.train_campaign(params, "my_campaign", verbose=True)
-```
+    ```
     """
     long_training_server = ENV.TWINLAB_TRAINING_SERVER
     training_server = ENV.TWINLAB_SERVER + "/train_campaign"
@@ -260,6 +265,7 @@ def query_campaign(campaign_name: str, verbose=False, debug=False) -> dict:
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
+
     - `campaign_name`: `str`; name of trained model to query
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
@@ -299,6 +305,7 @@ def list_campaigns(verbose=False, debug=False) -> Union[list, None]:
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
+
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
@@ -339,6 +346,7 @@ def predict_campaign(
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
+
     - `filepath_or_df`: `str`; location of csv dataset on local machine for evaluation or `pandas` dataframe
     - `campaign_name`: `str`; name of pre-trained model to use for predictions
     - `verbose`: `bool` determining level of information returned to the user
@@ -347,6 +355,7 @@ def predict_campaign(
     **NOTE:** Evaluation data must be a CSV file, or a `pandas` dataframe that is interpretable as a CSV.
 
     ## Returns
+
     `tuple` containing:
     - `df_mean`: `pandas` dataframe containing mean predictions
     - `df_std`: `pandas` dataframe containing standard deviation predictions
@@ -404,6 +413,7 @@ def delete_campaign(campaign_name: str, verbose=False, debug=False) -> None:
     **NOTE:** Your user information is automatically added to the request using the `.env` file.
 
     ## Arguments
+
     - `campaign_name`: `str`; name of trained model to delete from the cloud
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server

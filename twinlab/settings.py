@@ -26,9 +26,10 @@ ENV = Environment()
 
 print(
     f"""
-      == TwinLab Client Initialisation ==
-      Server  : {ENV.TWINLAB_SERVER}
-      Group   : {ENV.TWINLAB_GROUPNAME}
-      User    : {ENV.TWINLAB_USERNAME}
-      """
+    === TwinLab Client Initialisation ===
+    Training : {ENV.TWINLAB_TRAINING_SERVER}
+    Server   : {ENV.TWINLAB_SERVER}
+    Group    : {ENV.TWINLAB_GROUPNAME}
+    User     : {ENV.TWINLAB_USERNAME}
+    """
 )

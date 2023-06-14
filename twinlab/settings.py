@@ -21,12 +21,30 @@ class Environment(BaseSettings):
 
 ENV = Environment()
 
-print(
-    f"""
-    === TwinLab Client Initialisation ===
-    Training : {ENV.TWINLAB_TRAINING_SERVER}
-    Server   : {ENV.TWINLAB_SERVER}
-    Group    : {ENV.TWINLAB_GROUPNAME}
-    User     : {ENV.TWINLAB_USERNAME}
-    """
-)
+# if not ENV.TWINLAB_TRAINING_SERVER:
+#     print(
+#         f"""
+#         === TwinLab Client Initialisation ===
+#         Server   : {ENV.TWINLAB_SERVER}
+#         Group    : {ENV.TWINLAB_GROUPNAME}
+#         User     : {ENV.TWINLAB_USERNAME}
+#         """
+#     )
+# else:
+#     print(
+#         f"""
+#         === TwinLab Client Initialisation ===
+#         Training : {ENV.TWINLAB_TRAINING_SERVER}
+#         Server   : {ENV.TWINLAB_SERVER}
+#         Group    : {ENV.TWINLAB_GROUPNAME}
+#         User     : {ENV.TWINLAB_USERNAME}
+#         """
+#     )
+print()
+print("         === TwinLab Client Initialisation ===")
+if ENV.TWINLAB_TRAINING_SERVER:
+    print(f"         Training : {ENV.TWINLAB_TRAINING_SERVER}")
+print(f"         Server   : {ENV.TWINLAB_SERVER}")
+print(f"         Group    : {ENV.TWINLAB_GROUPNAME}")
+print(f"         User     : {ENV.TWINLAB_USERNAME}")
+print()

@@ -157,14 +157,12 @@ def list_datasets(verbose=False, debug=False) -> Union[list, None]:
     print(datasets)
     ```
     """
-    url = ENV.TWINLAB_SERVER + "/list_datasets"
+    url = ENV.TWINLAB_SERVER + "/datasets"
     headers = utils.construct_standard_headers(debug=debug)
     r = requests.get(url, headers=headers)
     utils.check_response(r)
+    datasets = r.json()
     if verbose:
-        utils.print_response_message(r)
-    datasets = r.json()["datasets"]
-    if verbose and datasets:
         print("Datasets:")
         pprint(datasets)
     return datasets
@@ -325,14 +323,14 @@ def list_campaigns(verbose=False, debug=False) -> Union[list, None]:
     url = ENV.TWINLAB_SERVER + "/list_campaigns"
     headers = utils.construct_standard_headers(debug=debug)
     r = requests.get(url, headers=headers)
-    utils.check_response(r)
-    if verbose:
-        utils.print_response_message(r)
-    campaigns = r.json()["campaigns"]
-    if verbose and campaigns:
-        print("Campaigns:")
-        pprint(campaigns)
-    return campaigns
+    # utils.check_response(r)
+    # if verbose:
+    #     utils.print_response_message(r)
+    # campaigns = r.json()["campaigns"]
+    # if verbose and campaigns:
+    #     print("Campaigns:")
+    #     pprint(campaigns)
+    # return campaigns
 
 
 def predict_campaign(

@@ -56,11 +56,15 @@ def get_command_line_args() -> argparse.Namespace:
 
 
 def construct_standard_headers(debug=False) -> dict:
-    headers = {
-        "X-Group": ENV.TWINLAB_GROUPNAME,
-        "X-User": ENV.TWINLAB_USERNAME,
-        "authorizationToken": ENV.TWINLAB_TOKEN,
-        "X-Debug": str(debug).lower(),
+    # headers = {
+    #     "X-Group": ENV.TWINLAB_GROUPNAME,
+    #     "X-User": ENV.TWINLAB_USERNAME,
+    #     "authorizationToken": ENV.TWINLAB_TOKEN,
+    #     "X-Debug": str(debug).lower(),
+    # }
+    headers = {  # TODO: Change names to twinLab
+        "X-RapidAPI-Subscription": ENV.RAPIDAPI_SUBSCRIPTION,
+        "X-RapidAPI-User": ENV.RAPIDAPI_USER,
     }
     return headers
 

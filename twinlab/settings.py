@@ -6,11 +6,9 @@ from pydantic import BaseSettings
 
 
 class Environment(BaseSettings):
-    TWINLAB_TRAINING_SERVER: Optional[str]
     TWINLAB_SERVER: str
-    TWINLAB_GROUPNAME: str
-    TWINLAB_USERNAME: str
-    TWINLAB_TOKEN: str
+    RAPIDAPI_SUBSCRIPTION: str
+    RAPIDAPI_USER: str
 
     class Config:
         env_prefix = ""
@@ -24,9 +22,8 @@ ENV = Environment()
 print(
     f"""
     === TwinLab Client Initialisation ===
-    Training : {ENV.TWINLAB_TRAINING_SERVER}
-    Server   : {ENV.TWINLAB_SERVER}
-    Group    : {ENV.TWINLAB_GROUPNAME}
-    User     : {ENV.TWINLAB_USERNAME}
+    Server       : {ENV.TWINLAB_SERVER}
+    Subscription : {ENV.RAPIDAPI_SUBSCRIPTION}
+    User         : {ENV.RAPIDAPI_USER}
     """
 )

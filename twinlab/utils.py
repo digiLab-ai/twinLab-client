@@ -17,6 +17,10 @@ PARAMS_COERCION = {
     "num_training_examples": "train_test_split",  #  TODO: Think of something better
     "filename": "dataset",  # Suppoprt old name
     "filename_std": "dataset_std",  # Support old name
+    "functional_input": "decompose_inputs",
+    "functional_output": "decompose_outputs",
+    "function_input": "decompose_inputs",
+    "function_output": "decompose_outputs",
 }
 
 

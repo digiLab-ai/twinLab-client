@@ -1,6 +1,12 @@
-# Project imports
+import sys
+
 import twinlab as tl
 
-print()  #  Initial white space
-campaign_name = "biscuits"
-tl.delete_campaign(campaign_name, verbose=True, debug=True)
+
+if len(sys.argv) != 2:
+    print(f"Usage: python {sys.argv[0]} <campaign_id>")
+    exit()
+
+campaign_id = sys.argv[1]
+
+tl.delete_campaign(campaign_id)

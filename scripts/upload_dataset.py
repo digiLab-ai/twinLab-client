@@ -1,11 +1,13 @@
-# Standard imports
-import os
+import sys
 
-# Project imports
 import twinlab as tl
 
-print()  #  Initial white space
-directory = "datasets"
-filename = "biscuits.csv"
-filepath = os.path.join(directory, filename)
-tl.upload_dataset(filepath, verbose=True, debug=True)
+
+if len(sys.argv) != 3:
+    print(f"Usage: python {sys.argv[0]} <path/to/dataset.csv> <dataset_id>")
+    exit()
+
+filepath = sys.argv[1]
+dataset_id = sys.argv[2]
+
+tl.upload_dataset(filepath, dataset_id)

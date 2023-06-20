@@ -1,12 +1,17 @@
-# Standard import
-import os
+import sys
 
-# Project imports
 import twinlab as tl
 
-print()  #  Initial white space
-directory = os.path.join("campaigns", "biscuits")
-filename = "params.json"
-campaign_name = "biscuits"
-filepath = os.path.join(directory, filename)
-tl.train_campaign(filepath, campaign_name, verbose=True, debug=True)
+
+if len(sys.argv) != 5:
+    print(
+        f"Usage: python {sys.argv[0]} <path/to/inputs.csv> <campaign_id> <method> <processor>")
+    exit()
+
+filepath = sys.argv[1]
+campaign_id = sys.argv[2]
+method = sys.argv[3]
+processor = sys.argv[4]
+
+response = tl.use_campaign(filepath, campaign_id, method, processor)
+print(response)

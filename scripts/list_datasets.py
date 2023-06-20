@@ -1,5 +1,7 @@
-# Project imports
+import json
+
 import twinlab as tl
 
-print()  #  Initial white space
-_ = tl.list_datasets(verbose=True, debug=True)
+
+datasets = tl.list_datasets()
+print(datasets)

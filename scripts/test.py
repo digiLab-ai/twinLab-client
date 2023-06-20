@@ -1,32 +1,68 @@
-# Standard imports
-import os
+import time
+from pprint import pprint
 
-# Project imports
 import twinlab as tl
 
-# Parameters
-dataset_directory = "datasets"
-dataset_filename = "biscuits.csv"
-dataset_name = dataset_filename
-campaign_directory = os.path.join("campaigns", "biscuits")
-training_filepath = os.path.join(dataset_directory, dataset_filename)
-params_filepath = os.path.join(campaign_directory, "params.json")
-eval_filepath = os.path.join(campaign_directory, "eval.csv")
-campaign_name = "biscuits"
-verbose = True
-debug = False
+dataset_path = "resources/datasets/pollution.csv"
+dataset_id = "pollution"
+campaign_path = "resources/campaigns/pollution/parameters.json"
+campaign_id = "pollution-campaign"
+predict_path = "resources/campaign/pollution/eval.csv"
+processor = "cpu"
 
-print()  #  Initial white space
-tl.upload_dataset(training_filepath,
-                  verbose=verbose, debug=debug)
-tl.query_dataset(dataset_name, verbose=verbose, debug=debug)
-tl.list_datasets(verbose=verbose, debug=debug)
-tl.train_campaign(params_filepath, campaign_name,
-                  verbose=verbose, debug=debug)
-tl.query_campaign(campaign_name, verbose=verbose, debug=debug)
-tl.list_campaigns(verbose=verbose, debug=debug)
-tl.predict_campaign(eval_filepath, campaign_name,
-                    verbose=verbose, debug=debug)
-tl.delete_campaign(campaign_name, verbose=verbose, debug=debug)
-tl.delete_dataset(dataset_name,
-                  verbose=verbose, debug=debug)
+response = tl.get_user()
+pprint(response)
+
+response = tl.get_versions()
+pprint(response)
+
+response = tl.list_datasets()
+pprint(response)
+
+response = tl.upload_dataset(dataset_path, dataset_id)
+pprint(response)
+
+response = tl.list_datasets()
+pprint(response)
+
+response = tl.view_dataset(dataset_id)
+pprint(response)
+
+response = tl.query_dataset(dataset_id)
+pprint(response)
+
+response = tl.list_campaigns()
+pprint(response)
+
+response = tl.train_campaign(campaign_path, campaign_id, processor)
+pprint(response)
+
+response = tl.status_campaign(campaign_id)
+pprint(response)
+
+# Allow time for the campaign to train
+time.sleep(10)
+
+response = tl.status_campaign(campaign_id)
+pprint(response)
+
+response = tl.list_campaigns()
+pprint(response)
+
+response = tl.query_campaign(campaign_id)
+pprint(response)
+
+response = tl.predict_campaign(predict_path, campaign_id, processor)
+pprint(response)
+
+response = tl.delete_campaign(campaign_id)
+pprint(response)
+
+response = tl.list_campaigns()
+pprint(response)
+
+response = tl.delete_dataset(dataset_id)
+pprint(response)
+
+response = tl.list_datasets()
+pprint(response)

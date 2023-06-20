@@ -9,10 +9,19 @@ import requests
 import pandas as pd
 
 # Project imports
+from . import api
 from . import utils
 from .settings import ENV
 
 ### Dataset functions ###
+
+
+def get_user(verbose=False, debug=False) -> dict:
+    return api.get_user()
+
+
+def get_versions(verbose=False, debug=False) -> dict:
+    return api.get_versions()
 
 
 def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, verbose=False, debug=False) -> None:
@@ -56,43 +65,68 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_name=None, 
     """
 
     # Sort out dataset_name
-    if dataset_name is None:
-        if type(filepath_or_df) == str:
-            dataset_name = filepath_or_df
-        else:
-            raise ValueError(
-                "A dataset_name must be specified if uploading a dataframe")
-    else:
-        if ("/" in dataset_name) or ("\\" in dataset_name):
-            raise ValueError("Dataset name cannot contain '/' or '\\'")
+    # if dataset_name is None:
+    #     if type(filepath_or_df) == str:
+    #         dataset_name = filepath_or_df
+    #     else:
+    #         raise ValueError(
+    #             "A dataset_name must be specified if uploading a dataframe")
+    # else:
+    #     if ("/" in dataset_name) or ("\\" in dataset_name):
+    #         raise ValueError("Dataset name cannot contain '/' or '\\'")
 
-    # Get the upload URL
-    headers = utils.construct_standard_headers(debug=debug)
-    headers["X-Dataset"] = dataset_name
-    lambda_url = ENV.TWINLAB_SERVER + "/generate_upload_url"
-    r = requests.get(lambda_url, headers=headers)
-    utils.check_response(r)
+    # # Get the upload URL
+    # headers = utils.construct_standard_headers(debug=debug)
+    # headers["X-Dataset"] = dataset_name
+    # lambda_url = ENV.TWINLAB_SERVER + "/generate_upload_url"
+    # r = requests.get(lambda_url, headers=headers)
+    # utils.check_response(r)
 
-    # Upload the file
-    if verbose:
-        utils.print_response_message(r)
-    upload_url = r.json()["url"]
+    # # Upload the file
+    # if verbose:
+    #     utils.print_response_message(r)
+    # upload_url = r.json()["url"]
+    # if type(filepath_or_df) is str:
+    #     filepath = filepath_or_df
+    #     utils.upload_file_to_presigned_url(
+    #         filepath, upload_url, verbose=verbose)
+    # else:
+    #     df = filepath_or_df
+    #     utils.upload_dataframe_to_presigned_url(
+    #         df, upload_url, verbose=verbose)
+    # if verbose:
+    #     print(f"Uploading {dataset_name}")
+
+    # # Process the uploaded dataset remotely
+    # process_url = ENV.TWINLAB_SERVER + "/process_uploaded_dataset"
+    # r = requests.post(process_url, headers=headers)
+    # if verbose:
+    #     utils.print_response_message(r)
+
     if type(filepath_or_df) is str:
         filepath = filepath_or_df
-        utils.upload_file_to_presigned_url(
-            filepath, upload_url, verbose=verbose)
-    else:
+    elif type(filepath_or_df) is pd.DataFrame:
         df = filepath_or_df
-        utils.upload_dataframe_to_presigned_url(
-            df, upload_url, verbose=verbose)
-    if verbose:
-        print(f"Uploading {dataset_name}")
+        buffer = io.BytesIO()
+        df.to_csv(buffer, index=False)
+        filepath = buffer.getvalue()
+    else:
+        raise ValueError(
+            "Filepath_or_df must be a string or pandas dataframe")
+    response = api.upload_dataset(filepath, dataset_name)
+    print(response)
 
-    # Process the uploaded dataset remotely
-    process_url = ENV.TWINLAB_SERVER + "/process_uploaded_dataset"
-    r = requests.post(process_url, headers=headers)
-    if verbose:
-        utils.print_response_message(r)
+
+def view_dataset(dataset_name: str, verbose=False, debug=False) -> pd.DataFrame:
+    """
+    # View dataset
+
+    View a dataset that exists on the twinLab cloud.
+    """
+    response = api.view_dataset(dataset_name)
+    csv_string = io.StringIO(response)
+    df = pd.read_csv(csv_string, sep=",")
+    return df
 
 
 def query_dataset(dataset_name: str, verbose=False, debug=False) -> pd.DataFrame:
@@ -123,19 +157,21 @@ def query_dataset(dataset_name: str, verbose=False, debug=False) -> pd.DataFrame
     print(df)
     ```
     """
-    url = ENV.TWINLAB_SERVER + "/query_dataset"
-    headers = utils.construct_standard_headers(debug=debug)
-    headers["X-Dataset"] = dataset_name
-    r = requests.get(url, headers=headers)
-    utils.check_response(r)
-    df = utils.extract_csv_from_response(r, "summary")
-    if verbose:
-        utils.print_response_message(r)
-        print("Summary:\n", df, "\n")
-    return df
+    # url = ENV.TWINLAB_SERVER + "/query_dataset"
+    # headers = utils.construct_standard_headers(debug=debug)
+    # headers["X-Dataset"] = dataset_name
+    # r = requests.get(url, headers=headers)
+    # utils.check_response(r)
+    # df = utils.extract_csv_from_response(r, "summary")
+    # if verbose:
+    #     utils.print_response_message(r)
+    #     print("Summary:\n", df, "\n")
+    response = api.summarise_dataset(dataset_name)
+    # TODO: This should return a dataframe
+    return response
 
 
-def list_datasets(verbose=False, debug=False) -> Union[list, None]:
+def list_datasets(verbose=False, debug=False) -> list:
     """
     # List datasets
 
@@ -157,18 +193,11 @@ def list_datasets(verbose=False, debug=False) -> Union[list, None]:
     print(datasets)
     ```
     """
-    url = ENV.TWINLAB_SERVER + "/datasets"
-    headers = utils.construct_standard_headers(debug=debug)
-    r = requests.get(url, headers=headers)
-    utils.check_response(r)
-    datasets = r.json()
-    if verbose:
-        print("Datasets:")
-        pprint(datasets)
+    datasets = api.list_datasets()
     return datasets
 
 
-def delete_dataset(dataset_name: str, verbose=False, debug=False) -> None:
+def delete_dataset(dataset_id: str, verbose=False, debug=False) -> None:
     """
     # Delete dataset
 
@@ -191,13 +220,15 @@ def delete_dataset(dataset_name: str, verbose=False, debug=False) -> None:
     tl.delete_dataset(dataset_name)
     ```
     """
-    url = ENV.TWINLAB_SERVER + "/delete_dataset"
-    headers = utils.construct_standard_headers(debug=debug)
-    headers["X-Dataset"] = dataset_name
-    r = requests.post(url, headers=headers)
-    utils.check_response(r)
-    if verbose:
-        utils.print_response_message(r)
+    # url = ENV.TWINLAB_SERVER + "/delete_dataset"
+    # headers = utils.construct_standard_headers(debug=debug)
+    # headers["X-Dataset"] = dataset_id
+    # r = requests.post(url, headers=headers)
+    # utils.check_response(r)
+    # if verbose:
+    #     utils.print_response_message(r)
+    response = api.delete_dataset(dataset_id)
+    print(response)
 
 ###  ###
 
@@ -294,7 +325,7 @@ def query_campaign(campaign_name: str, verbose=False, debug=False) -> dict:
     return metadata
 
 
-def list_campaigns(verbose=False, debug=False) -> Union[list, None]:
+def list_campaigns(verbose=False, debug=False) -> list:
     """
     # List datasets
 
@@ -320,17 +351,11 @@ def list_campaigns(verbose=False, debug=False) -> Union[list, None]:
     print(datasets)
     ```
     """
-    url = ENV.TWINLAB_SERVER + "/list_campaigns"
-    headers = utils.construct_standard_headers(debug=debug)
-    r = requests.get(url, headers=headers)
-    # utils.check_response(r)
-    # if verbose:
-    #     utils.print_response_message(r)
-    # campaigns = r.json()["campaigns"]
-    # if verbose and campaigns:
-    #     print("Campaigns:")
-    #     pprint(campaigns)
-    # return campaigns
+    # url = ENV.TWINLAB_SERVER + "/list_campaigns"
+    # headers = utils.construct_standard_headers(debug=debug)
+    # r = requests.get(url, headers=headers)
+    campaigns = api.list_campaigns()
+    return campaigns
 
 
 def predict_campaign(
@@ -425,10 +450,12 @@ def delete_campaign(campaign_name: str, verbose=False, debug=False) -> None:
     tl.delete_campaign(campaign)
     ```
     """
-    url = ENV.TWINLAB_SERVER + "/delete_campaign"
-    headers = utils.construct_standard_headers(debug=debug)
-    headers["X-Campaign"] = campaign_name
-    r = requests.post(url, headers=headers)
-    utils.check_response(r)
-    if verbose:
-        utils.print_response_message(r)
+    # url = ENV.TWINLAB_SERVER + "/delete_campaign"
+    # headers = utils.construct_standard_headers(debug=debug)
+    # headers["X-Campaign"] = campaign_name
+    # r = requests.post(url, headers=headers)
+    # utils.check_response(r)
+    # if verbose:
+    #     utils.print_response_message(r)
+    response = api.delete_campaign(campaign_name)
+    print(response)

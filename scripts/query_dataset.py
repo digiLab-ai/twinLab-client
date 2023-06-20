@@ -1,6 +1,13 @@
-# Project imports
+import json
+import sys
+
 import twinlab as tl
 
-print()  #  Initial white space
-dataset_name = "biscuits.csv"
-tl.query_dataset(dataset_name, verbose=True, debug=True)
+if len(sys.argv) != 2:
+    print(f"Usage: python {sys.argv[0]} <dataset_id>")
+    exit()
+
+dataset_id = sys.argv[1]
+
+response = tl.query_dataset(dataset_id)
+print(json.dumps(response, indent=4))

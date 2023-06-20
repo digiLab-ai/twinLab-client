@@ -11,11 +11,16 @@ import pandas as pd
 # Project imports
 from .settings import ENV
 
-
-PARAMS_COERCION = {  # Convert these names in the params file
+# Convert these names in the params file
+PARAMS_COERCION = {
     "test_train_split": "train_test_split",  # Common mistake
     "num_training_examples": "train_test_split",  #  TODO: Think of something better
-    "dataset": "filename",
+    "filename": "dataset",  # Suppoprt old name
+    "filename_std": "dataset_std",  # Support old name
+    "functional_input": "decompose_inputs",
+    "functional_output": "decompose_outputs",
+    "function_input": "decompose_inputs",
+    "function_output": "decompose_outputs",
 }
 
 

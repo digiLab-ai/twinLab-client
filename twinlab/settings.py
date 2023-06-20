@@ -4,6 +4,9 @@ from typing import Optional
 # Third-party imports
 from pydantic import BaseSettings
 
+# Project imports
+from ._version import __version__
+
 
 class Environment(BaseSettings):
     TWINLAB_SERVER: str
@@ -19,11 +22,12 @@ class Environment(BaseSettings):
 
 ENV = Environment()
 
-print(
-    f"""
-    === TwinLab Client Initialisation ===
-    Server       : {ENV.TWINLAB_SERVER}
-    Subscription : {ENV.RAPIDAPI_SUBSCRIPTION}
-    User         : {ENV.RAPIDAPI_USER}
-    """
-)
+print()
+print("         === TwinLab Client Initialisation ===")
+print(f"         Version  : {__version__}")
+if ENV.TWINLAB_TRAINING_SERVER:
+    print(f"         Training : {ENV.TWINLAB_TRAINING_SERVER}")
+print(f"         Server   : {ENV.TWINLAB_SERVER}")
+print(f"         Group    : {ENV.TWINLAB_GROUPNAME}")
+print(f"         User     : {ENV.TWINLAB_USERNAME}")
+print()

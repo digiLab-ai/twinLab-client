@@ -1,6 +1,3 @@
-# Standard imports
-from typing import Optional
-
 # Third-party imports
 from pydantic import BaseSettings
 
@@ -25,8 +22,6 @@ ENV = Environment()
 print()
 print("         === TwinLab Client Initialisation ===")
 print(f"         Version  : {__version__}")
-if ENV.TWINLAB_TRAINING_SERVER:
-    print(f"         Training : {ENV.TWINLAB_TRAINING_SERVER}")
 print(f"         Server   : {ENV.TWINLAB_SERVER}")
 print(f"         Group    : {ENV.TWINLAB_GROUPNAME}")
 print(f"         User     : {ENV.TWINLAB_USERNAME}")

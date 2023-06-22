@@ -82,15 +82,15 @@ def delete_dataset(dataset_id: str) -> dict:
     return response.json()
 
 
-def list_campaigns() -> dict:
-    url = f"{TWINLAB_SERVER}/campaigns"
+def list_models() -> dict:
+    url = f"{TWINLAB_SERVER}/models"
     headers = create_headers()
     response = requests.get(url, headers=headers)
     return response.json()
 
 
-def train_campaign(training_filepath: str, campaign_id: str, processor: str) -> dict:
-    url = f"{TWINLAB_SERVER}/campaigns/{campaign_id}"
+def train_model(training_filepath: str, model_id: str, processor: str) -> dict:
+    url = f"{TWINLAB_SERVER}/models/{model_id}"
     headers = create_headers("application/json")
     headers["X-Processor"] = processor
     json_string = open(training_filepath).read()
@@ -99,22 +99,22 @@ def train_campaign(training_filepath: str, campaign_id: str, processor: str) -> 
     return response.json()
 
 
-def status_campaign(campaign_id: str) -> dict:
-    url = f"{TWINLAB_SERVER}/campaigns/{campaign_id}"
+def status_model(model_id: str) -> dict:
+    url = f"{TWINLAB_SERVER}/models/{model_id}"
     headers = create_headers()
     response = requests.get(url, headers=headers)
     return response.json()
 
 
-def summarise_campaign(campaign_id: str) -> dict:
-    url = f"{TWINLAB_SERVER}/campaigns/{campaign_id}/summarise"
+def summarise_model(model_id: str) -> dict:
+    url = f"{TWINLAB_SERVER}/models/{model_id}/summarise"
     headers = create_headers()
     response = requests.get(url, headers=headers)
     return response.json()
 
 
-def use_campaign(input_path: str, campaign_id: str, method: str, processor: str) -> str:
-    url = f"{TWINLAB_SERVER}/campaigns/{campaign_id}/{method}"
+def use_model(input_path: str, model_id: str, method: str, processor: str) -> str:
+    url = f"{TWINLAB_SERVER}/models/{model_id}/{method}"
     headers = create_headers("text/csv")
     headers["X-Processor"] = processor
     csv_string = open(input_path, "rb").read()
@@ -122,8 +122,8 @@ def use_campaign(input_path: str, campaign_id: str, method: str, processor: str)
     return response.text
 
 
-def delete_campaign(campaign_id: str) -> dict:
-    url = f"{TWINLAB_SERVER}/campaigns/{campaign_id}"
+def delete_model(model_id: str) -> dict:
+    url = f"{TWINLAB_SERVER}/models/{model_id}"
     headers = create_headers()
     response = requests.delete(url, headers=headers)
     return response.json()

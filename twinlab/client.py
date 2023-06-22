@@ -128,7 +128,8 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
     else:
         raise ValueError(
             "filepath_or_df must be a string or pandas dataframe")
-    response = api.upload_dataset(filepath, dataset_id)
+    csv_string = open(filepath, "rb").read()
+    response = api.upload_dataset(csv_string, dataset_id)
     if verbose:
         print(response["message"])
 
@@ -446,9 +447,10 @@ def predict_campaign(
         buffer = io.BytesIO()
         df.to_csv(buffer, index=False)
         filepath = buffer.getvalue()
-    csv_string = api.use_model(
-        filepath, campaign_id, method="predict", processor="cpu")
-    df = pd.read_csv(io.StringIO(csv_string), sep=",")
+    eval_csv = open(filepath, "rb").read()
+    output_csv = api.use_model(
+        eval_csv, campaign_id, method="predict", processor="cpu")
+    df = pd.read_csv(io.StringIO(output_csv), sep=",")
     n = len(df.columns)
     df_mean, df_std = df.iloc[:, :n//2], df.iloc[:, n//2:]
     df_std.columns = df_std.columns.str.removesuffix(" [std_dev]")

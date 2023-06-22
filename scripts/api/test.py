@@ -1,13 +1,12 @@
 import time
+import json
 from pprint import pprint
 
 import api
 
-WAIT_TIME = 10  # Time for training to definitely complete [s]
-
 dataset_path = "resources/datasets/biscuits.csv"
 dataset_id = "biscuits"
-model_path = "resources/campaigns/biscuits/params.json"
+params_path = "resources/campaigns/biscuits/params.json"
 model_id = "biscuits-model"
 predict_path = "resources/campaigns/biscuits/eval.csv"
 processor = "cpu"
@@ -21,7 +20,8 @@ pprint(response)
 response = api.list_datasets()
 pprint(response)
 
-response = api.upload_dataset(dataset_path, dataset_id)
+data_csv = open(dataset_path, "r").read()
+response = api.upload_dataset(data_csv, dataset_id)
 pprint(response)
 
 response = api.list_datasets()
@@ -36,15 +36,15 @@ pprint(response)
 response = api.list_models()
 pprint(response)
 
-response = api.train_model(model_path, model_id, processor)
+parameters_json = open(params_path, "r").read()
+response = api.train_model(parameters_json, model_id, processor)
 pprint(response)
 
-response = api.status_model(model_id)
-pprint(response)
-
-# Allow time for the model to train
-print(f"Waiting {WAIT_TIME}s for model to train...")
-time.sleep(WAIT_TIME)
+complete = False  # Wait for job to complete
+while not complete:
+    status = api.status_model(model_id)
+    complete = status["job_complete"]
+    time.sleep(1)
 
 response = api.status_model(model_id)
 pprint(response)
@@ -55,8 +55,8 @@ pprint(response)
 response = api.summarise_model(model_id)
 pprint(response)
 
-response = api.use_model(
-    predict_path, model_id, "predict", processor)
+predict_csv = open(predict_path, "r").read()
+response = api.use_model(predict_csv, model_id, "predict", processor)
 pprint(response)
 
 response = api.delete_model(model_id)

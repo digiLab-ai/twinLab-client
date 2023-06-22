@@ -38,7 +38,7 @@ def get_versions(verbose=False, debug=False) -> dict:
     return version_info
 
 
-def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id=None, verbose=False, debug=False) -> None:
+def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, verbose=False, debug=False) -> None:
     """
     # Upload dataset
 
@@ -53,9 +53,8 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id=None, ve
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
 
-    **NOTE:** Local data must be a CSV file. If a `pandas` dataframe is uploaded then a `dataset_id` must be provided. 
-    If a local file is uploaded then the filename with the directories removed will be the uploaded file name, 
-    unless a value of `dataset_id` is provided, which will be used preferentially.
+    **NOTE:** Local data must be a CSV file, working data should be a pandas Dataframe. 
+    In either case a `dataset_id` must be provided.
 
     ## Examples
 
@@ -128,7 +127,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id=None, ve
         filepath = buffer.getvalue()
     else:
         raise ValueError(
-            "Filepath_or_df must be a string or pandas dataframe")
+            "filepath_or_df must be a string or pandas dataframe")
     response = api.upload_dataset(filepath, dataset_id)
     if verbose:
         print(response["message"])
@@ -286,14 +285,17 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
     tl.train_campaign(params, "my_campaign", verbose=True)
     ```
     """
-    if filepath_or_params is dict:
+    if type(filepath_or_params) is dict:
         params = filepath_or_params
-        buffer = io.BytesIO()
-        json.dump(params, buffer)
-        filepath = buffer.getvalue()
-    else:
+    elif type(filepath_or_params) is str:
         filepath = filepath_or_params
-    response = api.train_model(filepath, campaign_id, processor="cpu")
+        params = json.load(open(filepath))
+    else:
+        print(type(filepath_or_params))
+        raise ValueError(
+            "filepath_or_params must be either a string or a dictionary")
+    params_str = json.dumps(params)
+    response = api.train_model(params_str, campaign_id, processor="cpu")
     if verbose:
         print(response["message"])
         print()
@@ -392,7 +394,7 @@ def list_campaigns(verbose=False, debug=False) -> list:
 
 def predict_campaign(
     filepath_or_df: Union[str, pd.DataFrame], campaign_id: str, verbose=False, debug=False
-) -> Tuple[pd.DataFrame, pd.DataFrame]:  #  TODO: tuple(pandas.dfs)
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     # Predict campaign
 

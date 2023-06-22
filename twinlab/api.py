@@ -54,6 +54,7 @@ def list_datasets():
 
 
 def upload_dataset(dataset_path: str, dataset_id: str) -> dict:
+    # TODO: Change dataset_path to string_csv
     url = f"{TWINLAB_SERVER}/datasets/{dataset_id}"
     headers = create_headers("text/csv")
     csv_string = open(dataset_path, "rb").read()
@@ -89,12 +90,11 @@ def list_models() -> dict:
     return response.json()
 
 
-def train_model(training_filepath: str, model_id: str, processor: str) -> dict:
+def train_model(training_str: str, model_id: str, processor: str) -> dict:
     url = f"{TWINLAB_SERVER}/models/{model_id}"
     headers = create_headers("application/json")
     headers["X-Processor"] = processor
-    json_string = open(training_filepath).read()
-    training_parameters = json.loads(json_string)
+    training_parameters = json.loads(training_str)
     response = requests.put(url, headers=headers, json=training_parameters)
     return response.json()
 
@@ -114,6 +114,7 @@ def summarise_model(model_id: str) -> dict:
 
 
 def use_model(input_path: str, model_id: str, method: str, processor: str) -> str:
+    # TODO: Change dataset_path to string_csv
     url = f"{TWINLAB_SERVER}/models/{model_id}/{method}"
     headers = create_headers("text/csv")
     headers["X-Processor"] = processor

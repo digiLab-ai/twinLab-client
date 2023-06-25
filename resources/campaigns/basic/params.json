@@ -2,5 +2,5 @@
     "dataset_id": "basic",
     "inputs": ["x"],
     "outputs": ["y"],
-    "test_train_split": 10
+    "test_train_ratio": 1
 }

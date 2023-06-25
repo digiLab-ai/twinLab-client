@@ -15,7 +15,6 @@ if not TWINLAB_SERVER:
 
 def create_headers(content_type: Optional[str] = None):
     headers = {}
-
     if "rapidapi" in TWINLAB_SERVER:
         headers = {
             "X-RapidAPI-Key": os.getenv("TWINLAB_KEY"),
@@ -26,10 +25,8 @@ def create_headers(content_type: Optional[str] = None):
             "X-RapidAPI-Proxy-Secret": os.getenv("TWINLAB_SECRET"),
             "X-RapidAPI-User": os.getenv("TWINLAB_USERNAME"),
         }
-
     if content_type:
         headers["Content-Type"] = content_type
-
     return headers
 
 
@@ -55,7 +52,7 @@ def list_datasets():
 
 def upload_dataset(data_csv: str, dataset_id: str) -> dict:
     url = f"{TWINLAB_SERVER}/datasets/{dataset_id}"
-    headers = create_headers("text/csv")
+    headers = create_headers("text/plain")
     response = requests.put(url, headers=headers, data=data_csv)
     return response.json()
 
@@ -113,7 +110,7 @@ def summarise_model(model_id: str) -> dict:
 
 def use_model(eval_csv: str, model_id: str, method: str, processor: str) -> str:
     url = f"{TWINLAB_SERVER}/models/{model_id}/{method}"
-    headers = create_headers("text/csv")
+    headers = create_headers("text/plain")
     headers["X-Processor"] = processor
     response = requests.post(url, headers=headers, data=eval_csv)
     return response.text

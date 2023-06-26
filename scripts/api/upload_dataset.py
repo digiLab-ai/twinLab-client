@@ -11,5 +11,5 @@ filepath = sys.argv[1]
 dataset_id = sys.argv[2]
 
 data_csv = open(filepath, "r").read()
-response = upload_dataset(data_csv, dataset_id)
+response = upload_dataset(data_csv, dataset_id, verbose=True)
 print(json.dumps(response, indent=4))

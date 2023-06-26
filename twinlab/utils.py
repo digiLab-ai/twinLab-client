@@ -13,10 +13,9 @@ from .settings import ENV
 
 # Convert these names in the params file
 PARAMS_COERCION = {
-    "test_train_split": "train_test_split",  # Common mistake
-    "num_training_examples": "train_test_split",  #  TODO: Think of something better
-    "filename": "dataset",  # Suppoprt old name
-    "filename_std": "dataset_std",  # Support old name
+    "test_train_ratio": "train_test_ratio",  # Common mistake
+    "filename": "dataset_id",  # Suppoprt old name
+    "filename_std": "dataset_std_id",  # Support old name
     "functional_input": "decompose_inputs",
     "functional_output": "decompose_outputs",
     "function_input": "decompose_inputs",

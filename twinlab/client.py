@@ -9,6 +9,7 @@ import pandas as pd
 
 # Project imports
 from . import api
+from . import utils
 from .settings import ENV
 
 ### Dataset functions ###
@@ -18,7 +19,7 @@ def get_user(verbose=False, debug=False) -> dict:
     """
     Get the user information
     """
-    user_info = api.get_user()
+    user_info = api.get_user(verbose=debug)
     if verbose:
         print("User information:")
         pprint(user_info, compact=True, sort_dicts=False)
@@ -30,7 +31,7 @@ def get_versions(verbose=False, debug=False) -> dict:
     """
     Get the version information about the twinLab version
     """
-    version_info = api.get_versions()
+    version_info = api.get_versions(verbose=debug)
     if verbose:
         print("Version information:")
         pprint(version_info, compact=True, sort_dicts=False)
@@ -129,7 +130,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
         raise ValueError(
             "filepath_or_df must be a string or pandas dataframe")
     csv_string = open(filepath, "rb").read()
-    response = api.upload_dataset(csv_string, dataset_id)
+    response = api.upload_dataset(csv_string, dataset_id, verbose=debug)
     if verbose:
         print(response["message"])
 
@@ -140,7 +141,7 @@ def view_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
 
     View a dataset that exists on the twinLab cloud.
     """
-    response = api.view_dataset(dataset_id)
+    response = api.view_dataset(dataset_id, verbose=debug)
     csv_string = io.StringIO(response)
     df = pd.read_csv(csv_string, sep=",")
     if verbose:
@@ -179,7 +180,7 @@ def query_dataset(dataset_id: str, verbose=False, debug=False) -> dict:
     ```
     """
     # TODO: This should eventally return a dataframe, but cloud needs to be modified for this
-    query = api.summarise_dataset(dataset_id)
+    query = api.summarise_dataset(dataset_id, verbose=debug)
     if verbose:
         print("Dataset summary:")
         pprint(query, compact=True, sort_dicts=False)
@@ -209,7 +210,7 @@ def list_datasets(verbose=False, debug=False) -> list:
     print(datasets)
     ```
     """
-    datasets = api.list_datasets()
+    datasets = api.list_datasets(verbose=debug)
     if verbose:
         print("Datasets:")
         pprint(datasets, compact=True, sort_dicts=False)
@@ -244,7 +245,7 @@ def delete_dataset(dataset_id: str, verbose=False, debug=False) -> None:
     tl.delete_dataset(dataset_id)
     ```
     """
-    response = api.delete_dataset(dataset_id)
+    response = api.delete_dataset(dataset_id, verbose=debug)
     if verbose:
         print(response["message"])
         print()
@@ -295,8 +296,10 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
         print(type(filepath_or_params))
         raise ValueError(
             "filepath_or_params must be either a string or a dictionary")
+    params = utils.coerce_params_dict(params)
     params_str = json.dumps(params)
-    response = api.train_model(params_str, campaign_id, processor="cpu")
+    response = api.train_model(
+        params_str, campaign_id, processor="cpu", verbose=debug)
     if verbose:
         print(response["message"])
         print()
@@ -305,7 +308,7 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
 def status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     """
     """
-    response = api.status_model(campaign_id)
+    response = api.status_model(campaign_id, verbose=debug)
     if verbose:
         print(response["message"])
         print()
@@ -351,7 +354,7 @@ def query_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     #     pprint(metadata, compact=True, sort_dicts=False)
     # return metadata
     # TODO: This should eventally return a dataframe, but cloud needs to be modified for this
-    query = api.summarise_model(campaign_id)
+    query = api.summarise_model(campaign_id, verbose=debug)
     if verbose:
         print("Model summary:")
         pprint(query, compact=True, sort_dicts=False)
@@ -385,7 +388,7 @@ def list_campaigns(verbose=False, debug=False) -> list:
     print(campaigns)
     ```
     """
-    campaigns = api.list_models()
+    campaigns = api.list_models(verbose=debug)
     if verbose:
         print("Trained models:")
         pprint(campaigns, compact=True, sort_dicts=False)
@@ -449,7 +452,7 @@ def predict_campaign(
         filepath = buffer.getvalue()
     eval_csv = open(filepath, "rb").read()
     output_csv = api.use_model(
-        eval_csv, campaign_id, method="predict", processor="cpu")
+        eval_csv, campaign_id, method="predict", processor="cpu", verbose=debug)
     df = pd.read_csv(io.StringIO(output_csv), sep=",")
     n = len(df.columns)
     df_mean, df_std = df.iloc[:, :n//2], df.iloc[:, n//2:]
@@ -487,7 +490,7 @@ def delete_campaign(campaign_id: str, verbose=False, debug=False) -> None:
     tl.delete_campaign(campaign)
     ```
     """
-    response = api.delete_model(campaign_id)
+    response = api.delete_model(campaign_id, verbose=debug)
     if verbose:
         print(response["message"])
         print()

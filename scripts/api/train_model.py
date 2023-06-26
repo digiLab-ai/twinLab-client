@@ -13,5 +13,5 @@ model_id = sys.argv[2]
 processor = sys.argv[3]
 
 parameters_json = open(filepath, "r").read()
-response = train_model(parameters_json, model_id, processor)
+response = train_model(parameters_json, model_id, processor, verbose=True)
 print(json.dumps(response, indent=4))

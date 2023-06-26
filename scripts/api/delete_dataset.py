@@ -9,5 +9,5 @@ if len(sys.argv) != 2:
     exit()
 dataset_id = sys.argv[1]
 
-response = delete_dataset(dataset_id)
+response = delete_dataset(dataset_id, verbose=True)
 print(json.dumps(response, indent=4))

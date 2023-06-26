@@ -2,5 +2,5 @@
     "dataset_id": "biscuits",
     "inputs": ["Pack price [£]", "Number of biscuits per pack"],
     "outputs": ["Number of packs sold", "Profit [£]"],
-    "train_test_ratio": 1
+    "train_test_ratio": 0.8
 }

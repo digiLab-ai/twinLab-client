@@ -9,5 +9,5 @@ if len(sys.argv) != 2:
     exit()
 model_id = sys.argv[1]
 
-response = status_model(model_id)
+response = status_model(model_id, verbose=True)
 print(json.dumps(response, indent=4))

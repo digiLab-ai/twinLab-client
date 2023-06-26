@@ -180,12 +180,14 @@ def query_dataset(dataset_id: str, verbose=False, debug=False) -> dict:
     ```
     """
     # TODO: This should eventally return a dataframe, but cloud needs to be modified for this
-    query = api.summarise_dataset(dataset_id, verbose=debug)
+    response = api.summarise_dataset(dataset_id, verbose=debug)
+    csv_string = io.StringIO(response)
+    df = pd.read_csv(csv_string, sep=",")
     if verbose:
         print("Dataset summary:")
-        pprint(query, compact=True, sort_dicts=False)
+        print(df)
         print()
-    return query
+    return df
 
 
 def list_datasets(verbose=False, debug=False) -> list:

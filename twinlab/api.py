@@ -71,7 +71,7 @@ def summarise_dataset(dataset_id: str, verbose=False) -> dict:
     url = f"{TWINLAB_SERVER}/datasets/{dataset_id}/summarise"
     headers = _create_headers(verbose=verbose)
     response = requests.get(url, headers=headers)
-    return response.json()
+    return response.text
 
 
 def delete_dataset(dataset_id: str, verbose=False) -> dict:

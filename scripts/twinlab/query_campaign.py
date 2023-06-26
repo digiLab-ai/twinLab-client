@@ -9,5 +9,4 @@ if len(sys.argv) != 2:
 
 campaign_id = sys.argv[1]
 
-response = tl.query_campaign(campaign_id)
-print(json.dumps(response, indent=4))
+_ = tl.query_campaign(campaign_id, verbose=True)

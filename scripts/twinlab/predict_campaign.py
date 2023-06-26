@@ -10,7 +10,4 @@ if len(sys.argv) != 3:
 filepath = sys.argv[1]
 campaign_id = sys.argv[2]
 
-df_mean, df_std = tl.predict_campaign(filepath, campaign_id)
-print(df_mean)
-print(df_std)
-# print(json.dumps(response, indent=4))
+_ = tl.predict_campaign(filepath, campaign_id, verbose=True)

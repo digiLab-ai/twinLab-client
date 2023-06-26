@@ -33,14 +33,89 @@ and fill in your `twinLab` user details.
 
 ## Commands
 
-Testing:
+### Pipeline
 
 ```shell
-poetry run python scripts/test.py
+poetry run python scripts/twinlab/test.py
 ```
-where `test.py` can be replaced with any of the scripts in the `script` directory.
 
-## Example
+### Individual examples
+
+Get user information:
+```shell
+poetry run python scripts/twinlab/get_user.py
+```
+
+Get version information:
+```shell
+poetry run python scripts/twinlab/get_versions.py
+```
+
+List datasets:
+```shell
+poetry run python scripts/twinlab/list_datasets.py
+```
+
+Upload dataset:
+```shell
+poetry run python scripts/twinlab/upload_dataset.py <path/to/dataset.csv> <dataset_id>
+poetry run python scripts/twinlab/upload_dataset.py resources/datasets/biscuits.csv biscuits
+```
+
+View dataset:
+```shell
+poetry run python scripts/twinlab/view_dataset.py <dataset_id>
+poetry run python scripts/twinlab/view_dataset.py biscuits
+```
+
+Summarise a dataset:
+```shell
+poetry run python scripts/twinlab/summarise_dataset.py <dataset_id>
+poetry run python scripts/twinlab/summarise_dataset.py biscuits
+```
+
+List campaigns:
+```shell
+poetry run python scripts/twinlab/list_campaigns.py
+```
+
+Train campaign:
+```shell
+poetry run python scripts/twinlab/train_campaign.py <path/to/parameters.json> <campaign_id> <processor>
+poetry run python scripts/twinlab/train_campaign.py resources/campaigns/biscuits/params.json biscuits-campaign
+```
+
+Get campaign status:
+```shell
+poetry run python scripts/twinlab/status_campaign.py <campaign_id>
+poetry run python scripts/twinlab/status_campaign.py biscuits-campaign
+```
+
+Summarise campaign:
+```shell
+poetry run python scripts/twinlab/summarise_campaign.py <campaign_id>
+poetry run python scripts/twinlab/summarise_campaign.py biscuits-campaign
+```
+
+Predict using a trained campaign:
+```shell
+poetry run python scripts/twinlab/predict_campaign.py <path/to/inputs.csv> <campaign_id> <method> <processor>
+poetry run python scripts/twinlab/predict_campaign.py resources/campaigns/biscuits/eval.csv biscuits-campaign
+```
+
+Delete a campaign:
+```shell
+poetry run python scripts/twinlab/delete_campaign.py <campaign_id>
+poetry run python scripts/twinlab/delete_campaign.py biscuits-campaign
+```
+
+Delete a dataset:
+```shell
+poetry run python scripts/twinlab/delete_dataset.py <dataset_id>
+poetry run python scripts/twinlab/delete_dataset.py biscuits
+```
+
+## Full example
 
 Here we create some mock data (which has a quadratic relationship between `X` and `y`) and use `twinLab` to create a surrogate model with quantified uncertainty.
 ```python

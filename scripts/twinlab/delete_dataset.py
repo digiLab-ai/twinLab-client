@@ -10,4 +10,4 @@ if len(sys.argv) != 2:
 
 dataset_id = sys.argv[1]
 
-tl.delete_dataset(dataset_id)
+_ = tl.delete_dataset(dataset_id, verbose=True)

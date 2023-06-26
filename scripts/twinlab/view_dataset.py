@@ -9,5 +9,4 @@ if len(sys.argv) != 2:
 
 dataset_id = sys.argv[1]
 
-response = tl.view_dataset(dataset_id)
-print(response)
+_ = tl.view_dataset(dataset_id, verbose=True)

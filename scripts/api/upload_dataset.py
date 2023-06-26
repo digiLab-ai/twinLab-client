@@ -10,5 +10,6 @@ if len(sys.argv) != 3:
 filepath = sys.argv[1]
 dataset_id = sys.argv[2]
 
-response = upload_dataset(filepath, dataset_id)
+data_csv = open(filepath, "r").read()
+response = upload_dataset(data_csv, dataset_id)
 print(json.dumps(response, indent=4))

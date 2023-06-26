@@ -3,5 +3,4 @@ import json
 import twinlab as tl
 
 
-campaigns = tl.list_campaigns()
-print(campaigns)
+_ = tl.list_campaigns(verbose=True)

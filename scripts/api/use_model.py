@@ -12,5 +12,6 @@ model_id = sys.argv[2]
 method = sys.argv[3]
 processor = sys.argv[4]
 
-response = use_model(filepath, model_id, method, processor)
+eval_csv = open(filepath, "r").read()
+response = use_model(eval_csv, model_id, method, processor)
 print(response)

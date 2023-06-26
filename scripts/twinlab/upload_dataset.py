@@ -10,4 +10,4 @@ if len(sys.argv) != 3:
 filepath = sys.argv[1]
 dataset_id = sys.argv[2]
 
-tl.upload_dataset(filepath, dataset_id)
+_ = tl.upload_dataset(filepath, dataset_id, verbose=True)

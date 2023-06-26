@@ -11,5 +11,4 @@ if len(sys.argv) != 3:
 filepath = sys.argv[1]
 campaign_id = sys.argv[2]
 
-response = tl.train_campaign(filepath, campaign_id)
-print(response)
+_ = tl.train_campaign(filepath, campaign_id, verbose=True)

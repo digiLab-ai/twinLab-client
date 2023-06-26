@@ -9,4 +9,4 @@ if len(sys.argv) != 2:
 
 campaign_id = sys.argv[1]
 
-tl.delete_campaign(campaign_id)
+_ = tl.delete_campaign(campaign_id, verbose=True)

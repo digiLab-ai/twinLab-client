@@ -3,5 +3,4 @@ import json
 import twinlab as tl
 
 
-datasets = tl.list_datasets()
-print(datasets)
+_ = tl.list_datasets(verbose=True)

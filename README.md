@@ -123,21 +123,21 @@ Here we create some mock data (which has a quadratic relationship between `X` an
 import twinlab as tl
 import pandas as pd
 
-# Create a dataset and upload to the twinLab cloud
-df = pd.DataFrame({'X': [1, 2, 3, 4], 'y': [1, 4, 9, 16]})
-tl.upload_dataset(df, 'test.csv')
+# Create a dataset and upload to twinLab cloud
+df = pd.DataFrame({"X": [1, 2, 3, 4], "y": [1, 4, 9, 16]})
+tl.upload_dataset(df, "test-data")
 
 # Train a machine-learning model for the data
 params = {
-    'filename': 'test.csv',
-    'inputs': ['X'],
-    'outputs': ['y'],
+    "dataset_id": "test-data",
+    "inputs": ["X"],
+    "outputs": ["y"],
 }
-tl.train_campaign(params, campaign_name='test')
+tl.train_campaign(params, campaign_id="test-model")
 
 # Evaluate the model on some unseen data
-df = pd.DataFrame({'X': [1.5, 2.5, 3.5]})
-df_mean, df_std = tl.predict_campaign(df, campaign_name='test')
+df = pd.DataFrame({"X": [1.5, 2.5, 3.5]})
+df_mean, df_std = tl.predict_campaign(df, campaign_id="test-model")
 ```
 
 ## Notebooks

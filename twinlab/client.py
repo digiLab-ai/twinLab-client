@@ -41,7 +41,7 @@ def get_versions(verbose=False, debug=False) -> dict:
     return version_info
 
 
-def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, verbose=False, debug=False) -> None:
+def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, verbose=False, debug=False, use_url=False) -> None:
     """
     # Upload dataset
 
@@ -78,27 +78,37 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
     tl.upload_dataset(dataframe, "my_dataset")
     ```
     """
-    BIG_DATA = True
-
-    # Get the file as a filepath like object
-    if type(filepath_or_df) is str:
-        filepath = filepath_or_df
-    elif type(filepath_or_df) is pd.DataFrame:
-        df = filepath_or_df
-        buffer = io.BytesIO()
-        df.to_csv(buffer, index=False)
-        filepath = buffer.getvalue()
-    else:
-        raise ValueError("filepath_or_df must be a string or pandas dataframe")
 
     # Upload the file (either via link or directly)
-    if BIG_DATA:
+    if use_url:
         upload_url = api.generate_upload_url(dataset_id, verbose=debug)
-        utils.upload_file_to_presigned_url(
-            filepath, upload_url, verbose=verbose)
+        if type(filepath_or_df) is str:
+            filepath = filepath_or_df
+            utils.upload_file_to_presigned_url(
+                filepath, upload_url, verbose=verbose)
+        elif type(filepath_or_df) is pd.DataFrame:
+            df = filepath_or_df
+            utils.upload_dataframe_to_presigned_url(
+                df, upload_url, verbose=verbose)
+        else:
+            raise ValueError(
+                "filepath_or_df must be a string or pandas dataframe")
         response = api.process_uploaded_dataset(dataset_id, verbose=debug)
+
     else:
-        csv_string = open(filepath, "rb").read()
+        # Get the file as a filepath like object
+        if type(filepath_or_df) is str:
+            filepath = filepath_or_df
+            csv_string = open(filepath, "rb").read()
+        elif type(filepath_or_df) is pd.DataFrame:
+            df = filepath_or_df
+            buffer = io.BytesIO()
+            df.to_csv(buffer, index=False)
+            csv_string = buffer.getvalue()
+        else:
+            raise ValueError(
+                "filepath_or_df must be a string or pandas dataframe")
+
         response = api.upload_dataset(csv_string, dataset_id, verbose=debug)
         if verbose:
             print(response["message"])
@@ -426,12 +436,12 @@ def predict_campaign(
     """
     if type(filepath_or_df) is str:
         filepath = filepath_or_df
+        eval_csv = open(filepath, "rb").read()
     else:
         df = filepath_or_df
         buffer = io.BytesIO()
         df.to_csv(buffer, index=False)
-        filepath = buffer.getvalue()
-    eval_csv = open(filepath, "rb").read()
+        eval_csv = buffer.getvalue()
     output_csv = api.use_model(
         eval_csv, campaign_id, method="predict", processor="cpu", verbose=debug)
     df = pd.read_csv(io.StringIO(output_csv), sep=",")

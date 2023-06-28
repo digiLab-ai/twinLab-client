@@ -1,9 +1,6 @@
 # Version
 from ._version import __version__
 
-# Utility functions
-from .utils import get_command_line_args
-
 # API info functions
 from .client import get_user
 from .client import get_versions

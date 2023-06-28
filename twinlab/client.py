@@ -78,7 +78,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
     tl.upload_dataset(dataframe, "my_dataset")
     ```
     """
-    BIG_DATA = False
+    BIG_DATA = True
 
     # Get the file as a filepath like object
     if type(filepath_or_df) is str:

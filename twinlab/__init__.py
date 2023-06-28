@@ -2,7 +2,7 @@
 from ._version import __version__
 
 # API info functions
-from .client import get_user
+from .client import get_user_information
 from .client import get_versions
 
 # API dataset functions

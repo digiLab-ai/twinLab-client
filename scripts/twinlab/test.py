@@ -14,7 +14,7 @@ debug = True
 
 complete = False
 
-_ = tl.get_user(verbose=verbose, debug=debug)
+_ = tl.get_user_information(verbose=verbose, debug=debug)
 _ = tl.get_versions(verbose=verbose, debug=debug)
 _ = tl.list_datasets(verbose=verbose, debug=debug)
 tl.upload_dataset(dataset_path, dataset_id, verbose=verbose, debug=debug)

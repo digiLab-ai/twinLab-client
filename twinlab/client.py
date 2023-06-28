@@ -6,6 +6,7 @@ from pprint import pprint
 
 # Third-party imports
 import pandas as pd
+from typeguard import typechecked
 
 # Project imports
 from . import api
@@ -15,11 +16,22 @@ from .settings import ENV
 ### Dataset functions ###
 
 
-def get_user(verbose=False, debug=False) -> dict:
+@typechecked
+def get_user_information(verbose=False, debug=False) -> dict:
     """
     # Get user information
+
+    Get information about the user
+
+    ## Arguments
+
+    - `verbose`: `bool` determining level of information returned to the user
+    - `debug`: `bool` determining level of information logged on the server
+
+    ## Returns
+
+    - `dict` containing user information
     """
-    # TODO: Write docstring
     user_info = api.get_user(verbose=debug)
     if verbose:
         print("User information:")
@@ -28,11 +40,22 @@ def get_user(verbose=False, debug=False) -> dict:
     return user_info
 
 
+@typechecked
 def get_versions(verbose=False, debug=False) -> dict:
     """
-    # Get version information
+    # Get versions
+
+    Get information about the twinLab version being used
+
+    ## Arguments
+
+    - `verbose`: `bool` determining level of information returned to the user
+    - `debug`: `bool` determining level of information logged on the server
+
+    ## Returns
+
+    - `dict` containing version information
     """
-    # TODO: Write docstring
     version_info = api.get_versions(verbose=debug)
     if verbose:
         print("Version information:")
@@ -41,6 +64,7 @@ def get_versions(verbose=False, debug=False) -> dict:
     return version_info
 
 
+@typechecked
 def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, verbose=False, debug=False, use_url=False) -> None:
     """
     # Upload dataset
@@ -114,6 +138,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
             print(response["message"])
 
 
+@typechecked
 def view_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     """
     # View dataset
@@ -150,6 +175,7 @@ def view_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     return df
 
 
+@typechecked
 def query_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     """
     # Query dataset
@@ -187,6 +213,7 @@ def query_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     return df
 
 
+@typechecked
 def list_datasets(verbose=False, debug=False) -> list:
     """
     # List datasets
@@ -217,6 +244,7 @@ def list_datasets(verbose=False, debug=False) -> list:
     return datasets
 
 
+@typechecked
 def delete_dataset(dataset_id: str, verbose=False, debug=False) -> None:
     """
     # Delete dataset
@@ -253,6 +281,7 @@ def delete_dataset(dataset_id: str, verbose=False, debug=False) -> None:
 ### Campaign functions ###
 
 
+@typechecked
 def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbose=False, debug=False) -> None:
     """
     # Train campaign
@@ -306,9 +335,32 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
         print()
 
 
+@typechecked
 def status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     """
-    # Find the status campaign that has begun training
+    # Status campaign
+
+    Find the status campaign that has begun training
+
+    **NOTE:** Your user information is automatically added to the request using the `.env` file.
+
+    ## Arguments
+
+    - `campaign_id`: `str`; name of trained campaign to delete from the cloud
+    - `verbose`: `bool` determining level of information returned to the user
+    - `debug`: `bool` determining level of information logged on the server
+
+    ## Returns
+
+    - `dict` containg model status including training progress
+
+    ## Example
+
+    ```python
+    import twinlab as tl
+
+    tl.status_campaign("my_campaign")
+    ```
     """
     # TODO: Write docstring
     response = api.status_model(campaign_id, verbose=debug)
@@ -318,6 +370,7 @@ def status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     return response
 
 
+@typechecked
 def query_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     """
     # Query campaign
@@ -354,6 +407,7 @@ def query_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     return query
 
 
+@typechecked
 def list_campaigns(verbose=False, debug=False) -> list:
     """
     # List datasets
@@ -388,6 +442,7 @@ def list_campaigns(verbose=False, debug=False) -> list:
     return campaigns
 
 
+@typechecked
 def predict_campaign(
     filepath_or_df: Union[str, pd.DataFrame], campaign_id: str, verbose=False, debug=False
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -458,6 +513,7 @@ def predict_campaign(
     return df_mean, df_std
 
 
+@typechecked
 def delete_campaign(campaign_id: str, verbose=False, debug=False) -> None:
     """
     # Delete campaign

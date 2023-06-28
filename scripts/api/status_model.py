@@ -1,5 +1,5 @@
-import json
 import sys
+from pprint import pprint
 
 from api import status_model
 
@@ -10,4 +10,4 @@ if len(sys.argv) != 2:
 model_id = sys.argv[1]
 
 response = status_model(model_id, verbose=True)
-print(json.dumps(response, indent=4))
+pprint(response)

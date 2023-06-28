@@ -1,7 +1,6 @@
-import json
+from pprint import pprint
 
 from api import get_user
 
-
 response = get_user(verbose=True)
-print(json.dumps(response, indent=4))
+pprint(response)

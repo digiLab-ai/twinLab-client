@@ -5,15 +5,16 @@ import json
 from dotenv import load_dotenv
 import requests
 
-
 # Load environment variables
 load_dotenv()
 TWINLAB_SERVER: str = os.getenv("TWINLAB_SERVER")
 if not TWINLAB_SERVER:
     raise ValueError("TWINLAB_SERVER not set in .env")
 
+### Helper functions ###
 
-def _create_headers(content_type: Optional[str] = None, verbose=False):
+
+def _create_headers(content_type: Optional[str] = None, verbose=False) -> dict:
     headers = {}
     if "rapidapi" in TWINLAB_SERVER:
         headers = {
@@ -31,22 +32,33 @@ def _create_headers(content_type: Optional[str] = None, verbose=False):
         headers["X-Verbose"] = "true"
     return headers
 
+###  ###
 
-def get_versions(verbose=False):
+### API ###
+
+
+def get_versions(verbose=False) -> dict:
     url = f"{TWINLAB_SERVER}/versions"
     headers = _create_headers(verbose=verbose)
     response = requests.get(url, headers=headers)
     return response.json()
 
 
-def get_user(verbose=False):
+def get_user(verbose=False) -> dict:
     url = f"{TWINLAB_SERVER}/user"
     headers = _create_headers(verbose=verbose)
     response = requests.get(url, headers=headers)
     return response.json()
 
 
-def list_datasets(verbose=False):
+def generate_upload_url(dataset_id: str, verbose=False) -> str:
+    url = f"{TWINLAB_SERVER}/upload_url/{dataset_id}"
+    headers = _create_headers(verbose=verbose)
+    response = requests.get(url, headers=headers)
+    return response.text
+
+
+def list_datasets(verbose=False) -> dict:  #  TODO: Does this really return a dict?
     url = f"{TWINLAB_SERVER}/datasets"
     headers = _create_headers(verbose=verbose)
     response = requests.get(url, headers=headers)
@@ -124,3 +136,5 @@ def delete_model(model_id: str, verbose=False) -> dict:
     headers = _create_headers(verbose=verbose)
     response = requests.delete(url, headers=headers)
     return response.json()
+
+### ###

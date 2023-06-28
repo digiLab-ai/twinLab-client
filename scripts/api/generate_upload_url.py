@@ -1,7 +1,7 @@
 import sys
 from pprint import pprint
 
-from api import delete_dataset
+from api import generate_upload_url
 
 
 if len(sys.argv) != 2:
@@ -9,5 +9,5 @@ if len(sys.argv) != 2:
     exit()
 dataset_id = sys.argv[1]
 
-response = delete_dataset(dataset_id, verbose=True)
+response = generate_upload_url(dataset_id, verbose=True)
 pprint(response)

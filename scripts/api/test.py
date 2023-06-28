@@ -1,5 +1,4 @@
 import time
-import json
 from pprint import pprint
 
 import api

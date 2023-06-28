@@ -1,5 +1,5 @@
-import json
 import sys
+from pprint import pprint
 
 from api import train_model
 
@@ -14,4 +14,4 @@ processor = sys.argv[3]
 
 parameters_json = open(filepath, "r").read()
 response = train_model(parameters_json, model_id, processor, verbose=True)
-print(json.dumps(response, indent=4))
+pprint(response)

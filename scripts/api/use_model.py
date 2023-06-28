@@ -1,4 +1,5 @@
 import sys
+from pprint import pprint
 
 from api import use_model
 
@@ -14,4 +15,4 @@ processor = sys.argv[4]
 
 eval_csv = open(filepath, "r").read()
 response = use_model(eval_csv, model_id, method, processor, verbose=True)
-print(response)
+pprint(response)

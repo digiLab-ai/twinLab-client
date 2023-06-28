@@ -1,4 +1,5 @@
 import sys
+from pprint import pprint
 
 from api import summarise_dataset
 
@@ -8,4 +9,4 @@ if len(sys.argv) != 2:
 dataset_id = sys.argv[1]
 
 response = summarise_dataset(dataset_id, verbose=True)
-print(response)
+pprint(response)

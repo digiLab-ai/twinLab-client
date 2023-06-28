@@ -17,8 +17,9 @@ from .settings import ENV
 
 def get_user(verbose=False, debug=False) -> dict:
     """
-    Get the user information
+    # Get user information
     """
+    # TODO: Write docstring
     user_info = api.get_user(verbose=debug)
     if verbose:
         print("User information:")
@@ -29,8 +30,9 @@ def get_user(verbose=False, debug=False) -> dict:
 
 def get_versions(verbose=False, debug=False) -> dict:
     """
-    Get the version information about the twinLab version
+    # Get version information
     """
+    # TODO: Write docstring
     version_info = api.get_versions(verbose=debug)
     if verbose:
         print("Version information:")
@@ -64,7 +66,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
     import twinlab as tl
 
     data_filepath = "resources/data/my_data.csv"
-    tl.upload_dataset(data_filepath) # This will be my_data.csv in the cloud
+    tl.upload_dataset(data_filepath, my_data) # This will be my_data.csv in the cloud
     ```
 
     Upload a `pandas` dataframe:
@@ -73,52 +75,12 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
     import twinlab as tl
 
     dataframe = pd.DataFrame({'X': [1, 2, 3, 4], 'y': [1, 4, 9, 16]})
-    dataset_id = "test.csv" # Give the dataset a name in the cloud
-    tl.upload_dataset(dataframe, dataset_id)
+    tl.upload_dataset(dataframe, "my_dataset")
     ```
     """
+    BIG_DATA = False
 
-    # Sort out dataset_id
-    # if dataset_id is None:
-    #     if type(filepath_or_df) == str:
-    #         dataset_id = filepath_or_df
-    #     else:
-    #         raise ValueError(
-    #             "A dataset_id must be specified if uploading a dataframe")
-    # else:
-    #     if ("/" in dataset_id) or ("\\" in dataset_id):
-    #         raise ValueError("Dataset name cannot contain '/' or '\\'")
-
-    # # Get the upload URL
-    # headers = utils.construct_standard_headers(debug=debug)
-    # headers["X-Dataset"] = dataset_id
-    # lambda_url = ENV.TWINLAB_SERVER + "/generate_upload_url"
-    # r = requests.get(lambda_url, headers=headers)
-    # utils.check_response(r)
-
-    # # Upload the file
-    # if verbose:
-    #     utils.print_response_message(r)
-    # upload_url = r.json()["url"]
-    # if type(filepath_or_df) is str:
-    #     filepath = filepath_or_df
-    #     utils.upload_file_to_presigned_url(
-    #         filepath, upload_url, verbose=verbose)
-    # else:
-    #     df = filepath_or_df
-    #     utils.upload_dataframe_to_presigned_url(
-    #         df, upload_url, verbose=verbose)
-    # if verbose:
-    #     print(f"Uploading {dataset_id}")
-
-    # # Process the uploaded dataset remotely
-    # process_url = ENV.TWINLAB_SERVER + "/process_uploaded_dataset"
-    # r = requests.post(process_url, headers=headers)
-    # if verbose:
-    #     utils.print_response_message(r)
-
-    # TODO: Change to work with an upload URL
-    # TODO: Check that this works with dataframes
+    # Get the file as a filepath like object
     if type(filepath_or_df) is str:
         filepath = filepath_or_df
     elif type(filepath_or_df) is pd.DataFrame:
@@ -127,12 +89,19 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
         df.to_csv(buffer, index=False)
         filepath = buffer.getvalue()
     else:
-        raise ValueError(
-            "filepath_or_df must be a string or pandas dataframe")
-    csv_string = open(filepath, "rb").read()
-    response = api.upload_dataset(csv_string, dataset_id, verbose=debug)
-    if verbose:
-        print(response["message"])
+        raise ValueError("filepath_or_df must be a string or pandas dataframe")
+
+    # Upload the file (either via link or directly)
+    if BIG_DATA:
+        upload_url = api.generate_upload_url(dataset_id, verbose=debug)
+        utils.upload_file_to_presigned_url(
+            filepath, upload_url, verbose=verbose)
+        response = api.process_uploaded_dataset(dataset_id, verbose=debug)
+    else:
+        csv_string = open(filepath, "rb").read()
+        response = api.upload_dataset(csv_string, dataset_id, verbose=debug)
+        if verbose:
+            print(response["message"])
 
 
 def view_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
@@ -140,6 +109,26 @@ def view_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     # View dataset
 
     View a dataset that exists on the twinLab cloud.
+
+    ## Arguments
+
+    - `dataset_id`: `str`; name for the dataset when saved to the twinLab cloud
+    - `verbose`: `bool` determining level of information returned to the user
+    - `debug`: `bool` determining level of information logged on the server
+
+    ## Returns
+
+    - `pandas.DataFrame` of the dataset.
+
+
+   ## Example
+
+    ```python
+    import twinlab as tl
+
+    df = tl.view_dataset("my_dataset")
+    print(df)
+    ```
     """
     response = api.view_dataset(dataset_id, verbose=debug)
     csv_string = io.StringIO(response)
@@ -151,7 +140,7 @@ def view_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     return df
 
 
-def query_dataset(dataset_id: str, verbose=False, debug=False) -> dict:
+def query_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     """
     # Query dataset
 
@@ -167,19 +156,17 @@ def query_dataset(dataset_id: str, verbose=False, debug=False) -> dict:
 
     ## Returns
 
-    `pandas` dataframe containing summary statistics for the dataset.
+    - `pandas.DataFrame` containing summary statistics for the dataset.
 
     ## Example
 
     ```python
     import twinlab as tl
 
-    dataset_id = "my_dataset.csv"
-    df = tl.query_dataset(dataset_id)
+    df = tl.query_dataset("my_dataset")
     print(df)
     ```
     """
-    # TODO: This should eventally return a dataframe, but cloud needs to be modified for this
     response = api.summarise_dataset(dataset_id, verbose=debug)
     csv_string = io.StringIO(response)
     df = pd.read_csv(csv_string, sep=",")
@@ -236,15 +223,14 @@ def delete_dataset(dataset_id: str, verbose=False, debug=False) -> None:
 
     ## Returns
 
-    List of `str` dataset ids
+    - `list` of `str` dataset ids
 
     ## Example
 
     ```python
     import twinlab as tl
 
-    dataset_id = "my_dataset.csv"
-    tl.delete_dataset(dataset_id)
+    tl.delete_dataset("my_dataset")
     ```
     """
     response = api.delete_dataset(dataset_id, verbose=debug)
@@ -276,8 +262,11 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
 
     Train using a local `json` parameters file:
     ```python
-    tl.train_campaign("params.json", "my_campaign", verbose=True)
+    import twinlab as tl
+
+    tl.train_campaign("path/to/params.json", "my_campaign")
     ```
+    import twinlab as tl
 
     Train via a `python` dictionary:
     ```python
@@ -286,7 +275,7 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
         "inputs": ["X1", "X2"],
         "outputs": ["y1", "y2"],
     }
-    tl.train_campaign(params, "my_campaign", verbose=True)
+    tl.train_campaign(params, "my_campaign")
     ```
     """
     if type(filepath_or_params) is dict:
@@ -309,7 +298,9 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
 
 def status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     """
+    # Find the status campaign that has begun training
     """
+    # TODO: Write docstring
     response = api.status_model(campaign_id, verbose=debug)
     if verbose:
         print(response["message"])
@@ -333,29 +324,18 @@ def query_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
 
     ## Returns
 
-    dictionary containing summary statistics for the dataset.
+    - dictionary containing summary statistics for the dataset.
 
     ## Example
 
     ```python
     import twinlab_client as tl
 
-    campaign = "my_campaign"
-    tl.query_campaign(campaign)
+    info = tl.query_campaign("my_campaign")
+    print(info)
     ```
     """
-    # url = ENV.TWINLAB_SERVER + "/query_campaign"
-    # headers = utils.construct_standard_headers(debug=debug)
-    # headers["X-Campaign"] = campaign_id
-    # r = requests.get(url, headers=headers)
-    # utils.check_response(r)
-    # metadata = utils.extract_item_from_response(r, "metadata")
-    # if verbose:
-    #     utils.print_response_message(r)
-    #     print("Metadata:")
-    #     pprint(metadata, compact=True, sort_dicts=False)
-    # return metadata
-    # TODO: This should eventally return a dataframe, but cloud needs to be modified for this
+    # TODO: This should eventually return a dataframe
     query = api.summarise_model(campaign_id, verbose=debug)
     if verbose:
         print("Model summary:")
@@ -379,7 +359,7 @@ def list_campaigns(verbose=False, debug=False) -> list:
 
     ## Returns
 
-    A list of `str` campaign ids
+    - A `list` of `str` campaign ids
 
     ## Example
 
@@ -419,9 +399,9 @@ def predict_campaign(
 
     ## Returns
 
-    `tuple` containing:
-    - `df_mean`: `pandas` dataframe containing mean predictions
-    - `df_std`: `pandas` dataframe containing standard deviation predictions
+    - `tuple` containing:
+        - `df_mean`: `pandas.DataFrame` containing mean predictions
+        - `df_std`: `pandas.DataFrame` containing standard deviation predictions
 
 
     ## Example
@@ -440,9 +420,8 @@ def predict_campaign(
     import pandas as pd
     import twinlab as tl
 
-    df= pd.DataFrame({'X': [1.5, 2.5, 3.5]}
-    campaign_id = "my_campaign" # Pre-trained
-    tl.predict_campaign(df, campaign_id)
+    df = pd.DataFrame({'X': [1.5, 2.5, 3.5]}
+    tl.predict_campaign(df, "my_campaign")
     ```
     """
     if type(filepath_or_df) is str:
@@ -488,8 +467,7 @@ def delete_campaign(campaign_id: str, verbose=False, debug=False) -> None:
     ```python
     import twinlab as tl
 
-    campaign = "my_campaign"
-    tl.delete_campaign(campaign)
+    tl.delete_campaign("my_campaign")
     ```
     """
     response = api.delete_model(campaign_id, verbose=debug)

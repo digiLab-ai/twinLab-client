@@ -58,10 +58,10 @@ def generate_upload_url(dataset_id: str, verbose=False) -> str:
     return response.text
 
 
-def list_datasets(verbose=False) -> dict:  #  TODO: Does this really return a dict?
-    url = f"{TWINLAB_SERVER}/datasets"
+def process_uploaded_dataset(dataset_id: str, verbose=False) -> dict:
+    url = f"{TWINLAB_SERVER}/datasets/{dataset_id}"
     headers = _create_headers(verbose=verbose)
-    response = requests.get(url, headers=headers)
+    response = requests.post(url, headers=headers)
     return response.json()
 
 
@@ -69,6 +69,13 @@ def upload_dataset(data_csv: str, dataset_id: str, verbose=False) -> dict:
     url = f"{TWINLAB_SERVER}/datasets/{dataset_id}"
     headers = _create_headers("text/plain", verbose=verbose)
     response = requests.put(url, headers=headers, data=data_csv)
+    return response.json()
+
+
+def list_datasets(verbose=False) -> list:
+    url = f"{TWINLAB_SERVER}/datasets"
+    headers = _create_headers(verbose=verbose)
+    response = requests.get(url, headers=headers)
     return response.json()
 
 
@@ -93,19 +100,19 @@ def delete_dataset(dataset_id: str, verbose=False) -> dict:
     return response.json()
 
 
-def list_models(verbose=False) -> dict:
-    url = f"{TWINLAB_SERVER}/models"
-    headers = _create_headers(verbose=verbose)
-    response = requests.get(url, headers=headers)
-    return response.json()
-
-
 def train_model(parameters_json: str, model_id: str, processor: str, verbose=False) -> dict:
     url = f"{TWINLAB_SERVER}/models/{model_id}"
     headers = _create_headers("application/json", verbose=verbose)
     headers["X-Processor"] = processor
     training_parameters = json.loads(parameters_json)
     response = requests.put(url, headers=headers, json=training_parameters)
+    return response.json()
+
+
+def list_models(verbose=False) -> list:
+    url = f"{TWINLAB_SERVER}/models"
+    headers = _create_headers(verbose=verbose)
+    response = requests.get(url, headers=headers)
     return response.json()
 
 

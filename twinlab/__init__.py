@@ -18,6 +18,7 @@ from .client import status_campaign
 from .client import query_campaign
 from .client import list_campaigns
 from .client import predict_campaign
+# from .client import sample_campaign
 from .client import delete_campaign
 
 # Plotting functions

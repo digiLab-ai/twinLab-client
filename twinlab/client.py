@@ -13,7 +13,7 @@ from . import api
 from . import utils
 from .settings import ENV
 
-### Dataset functions ###
+### General functions ###
 
 
 @typechecked
@@ -62,6 +62,10 @@ def get_versions(verbose=False, debug=False) -> dict:
         pprint(version_info, compact=True, sort_dicts=False)
         print()
     return version_info
+
+### ###
+
+### Dataset functions ###
 
 
 @typechecked
@@ -139,6 +143,37 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
 
 
 @typechecked
+def list_datasets(verbose=False, debug=False) -> list:
+    """
+    # List datasets
+
+    List datasets that have been uploaded to the `twinLab` cloud
+
+    **NOTE:** Your user information is automatically added to the request using the `.env` file.
+
+    ## Arguments
+
+    - `verbose`: `bool` determining level of information returned to the user
+    - `debug`: `bool` determining level of information logged on the server
+
+    ## Example
+
+    ```python
+    import twinlab as tl
+
+    datasets = tl.list_datasets()
+    print(datasets)
+    ```
+    """
+    datasets = api.list_datasets(verbose=debug)
+    if verbose:
+        print("Datasets:")
+        pprint(datasets, compact=True, sort_dicts=False)
+        print()
+    return datasets
+
+
+@typechecked
 def view_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     """
     # View dataset
@@ -211,37 +246,6 @@ def query_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
         print(df)
         print()
     return df
-
-
-@typechecked
-def list_datasets(verbose=False, debug=False) -> list:
-    """
-    # List datasets
-
-    List datasets that have been uploaded to the `twinLab` cloud
-
-    **NOTE:** Your user information is automatically added to the request using the `.env` file.
-
-    ## Arguments
-
-    - `verbose`: `bool` determining level of information returned to the user
-    - `debug`: `bool` determining level of information logged on the server
-
-    ## Example
-
-    ```python
-    import twinlab as tl
-
-    datasets = tl.list_datasets()
-    print(datasets)
-    ```
-    """
-    datasets = api.list_datasets(verbose=debug)
-    if verbose:
-        print("Datasets:")
-        pprint(datasets, compact=True, sort_dicts=False)
-        print()
-    return datasets
 
 
 @typechecked
@@ -336,6 +340,41 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
 
 
 @typechecked
+def list_campaigns(verbose=False, debug=False) -> list:
+    """
+    # List datasets
+
+    List campaigns that have been completed to the `twinLab` cloud.
+
+    **NOTE:** Your user information is automatically added to the request using the `.env` file.
+
+    ## Arguments
+
+    - `verbose`: `bool` determining level of information returned to the user
+    - `debug`: `bool` determining level of information logged on the server
+
+    ## Returns
+
+    - A `list` of `str` campaign ids
+
+    ## Example
+
+    ```python
+    import twinlab as tl
+
+    campaigns = tl.list_campaigns()
+    print(campaigns)
+    ```
+    """
+    campaigns = api.list_models(verbose=debug)
+    if verbose:
+        print("Trained models:")
+        pprint(campaigns, compact=True, sort_dicts=False)
+        print()
+    return campaigns
+
+
+@typechecked
 def status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     """
     # Status campaign
@@ -362,7 +401,7 @@ def status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     tl.status_campaign("my_campaign")
     ```
     """
-    # TODO: Write docstring
+    # TODO: Rename view campaign?
     response = api.status_model(campaign_id, verbose=debug)
     if verbose:
         print(response["message"])
@@ -408,38 +447,22 @@ def query_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
 
 
 @typechecked
-def list_campaigns(verbose=False, debug=False) -> list:
-    """
-    # List datasets
+def _use_campaign(
+    filepath_or_df: Union[str, pd.DataFrame], campaign_id: str, method: str, verbose=False, debug=False
+) -> pd.DataFrame:
 
-    List campaigns that have been completed to the `twinLab` cloud.
-
-    **NOTE:** Your user information is automatically added to the request using the `.env` file.
-
-    ## Arguments
-
-    - `verbose`: `bool` determining level of information returned to the user
-    - `debug`: `bool` determining level of information logged on the server
-
-    ## Returns
-
-    - A `list` of `str` campaign ids
-
-    ## Example
-
-    ```python
-    import twinlab as tl
-
-    campaigns = tl.list_campaigns()
-    print(campaigns)
-    ```
-    """
-    campaigns = api.list_models(verbose=debug)
-    if verbose:
-        print("Trained models:")
-        pprint(campaigns, compact=True, sort_dicts=False)
-        print()
-    return campaigns
+    if type(filepath_or_df) is str:
+        filepath = filepath_or_df
+        eval_csv = open(filepath, "rb").read()
+    else:
+        df = filepath_or_df
+        buffer = io.BytesIO()
+        df.to_csv(buffer, index=False)
+        eval_csv = buffer.getvalue()
+    output_csv = api.use_model(
+        eval_csv, campaign_id, method=method, processor="cpu", verbose=debug)
+    df = pd.read_csv(io.StringIO(output_csv), sep=",")
+    return df
 
 
 @typechecked
@@ -471,7 +494,7 @@ def predict_campaign(
 
     ## Example
 
-    Use a local file:
+    Using a local file:
     ```python
     import twinlab_client as tl
 
@@ -480,7 +503,7 @@ def predict_campaign(
     df_mean, df_std = tl.sample_campaign(file, campaign_id)
     ```
 
-    Use a `pandas` dataframe:
+    Using a `pandas` dataframe:
     ```python
     import pandas as pd
     import twinlab as tl
@@ -489,17 +512,10 @@ def predict_campaign(
     tl.predict_campaign(df, "my_campaign")
     ```
     """
-    if type(filepath_or_df) is str:
-        filepath = filepath_or_df
-        eval_csv = open(filepath, "rb").read()
-    else:
-        df = filepath_or_df
-        buffer = io.BytesIO()
-        df.to_csv(buffer, index=False)
-        eval_csv = buffer.getvalue()
-    output_csv = api.use_model(
-        eval_csv, campaign_id, method="predict", processor="cpu", verbose=debug)
-    df = pd.read_csv(io.StringIO(output_csv), sep=",")
+
+    df = _use_campaign(filepath_or_df, campaign_id,
+                       method="predict", verbose=verbose, debug=debug)
+
     n = len(df.columns)
     df_mean, df_std = df.iloc[:, :n//2], df.iloc[:, n//2:]
     df_std.columns = df_std.columns.str.removesuffix(" [std_dev]")
@@ -510,7 +526,63 @@ def predict_campaign(
         print("Standard deviation predictions:")
         print(df_std)
         print()
+
     return df_mean, df_std
+
+
+@typechecked
+def sample_campaign(
+    filepath_or_df: Union[str, pd.DataFrame], campaign_id: str, verbose=False, debug=False
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    # Sample campaign
+
+    Draw samples from a pre-trained campaign that exists on the `twinLab` cloud.
+
+    **NOTE:** Your user information is automatically added to the request using the `.env` file.
+
+    ## Arguments
+
+    - `filepath_or_df`: `str`; location of csv dataset on local machine for evaluation or `pandas` dataframe
+    - `campaign_id`: `str`; name of pre-trained campaign to use for predictions
+    - `verbose`: `bool` determining level of information returned to the user
+    - `debug`: `bool` determining level of information logged on the server
+
+    **NOTE:** Evaluation data must be a CSV file, or a `pandas` dataframe that is interpretable as a CSV.
+
+    ## Returns
+
+    - `tuple` containing:
+        - `df_mean`: `pandas.DataFrame` containing mean predictions
+        - `df_std`: `pandas.DataFrame` containing standard deviation predictions
+
+
+    ## Example
+
+    Using a local file:
+    ```python
+    import twinlab_client as tl
+
+    filepath = "resources/data/eval.csv" # Local
+    campaign_id = "my_campaign" # Pre-trained
+    df_mean, df_std = tl.sample_campaign(file, campaign_id)
+    ```
+
+    Using a `pandas` dataframe:
+    ```python
+    import pandas as pd
+    import twinlab as tl
+
+    df = pd.DataFrame({'X': [1.5, 2.5, 3.5]}
+    tl.predict_campaign(df, "my_campaign")
+    ```
+    """
+
+    df_samples = _use_campaign(
+        filepath_or_df, campaign_id, method="sample", verbose=verbose, debug=debug)
+    # TODO: Munge to get the format correct
+
+    return df_samples
 
 
 @typechecked
@@ -540,3 +612,5 @@ def delete_campaign(campaign_id: str, verbose=False, debug=False) -> None:
     if verbose:
         print(response["message"])
         print()
+
+### ###

@@ -1,5 +1,5 @@
 import time
-from pprint import pprint
+from pprint import pprint as pprint_original
 
 import api
 
@@ -10,6 +10,10 @@ model_id = "biscuits-model"
 predict_path = "resources/campaigns/biscuits/eval.csv"
 processor = "cpu"
 verbose = True
+
+
+def pprint(msg): return pprint_original(msg, compact=True, sort_dicts=False)
+
 
 response = api.get_user(verbose=True)
 pprint(response)

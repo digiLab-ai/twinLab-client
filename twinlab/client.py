@@ -23,9 +23,17 @@ WAIT_TIME = 1
 def _status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     response = api.status_model(campaign_id, verbose=debug)
     if verbose:
-        print(response["message"])
-        print()
+        message = _get_message(response)
+        print(message, "\n")
     return response
+
+
+def _get_message(response: dict) -> str:
+    try:
+        message = response["message"]
+    except:
+        message = response
+    return message
 
 ### ###
 
@@ -47,6 +55,14 @@ def get_user_information(verbose=False, debug=False) -> dict:
     ## Returns
 
     - `dict` containing user information
+
+    ## Example
+    ```
+    import twinlab as tl
+
+    user_info = tl.get_user_information()
+    print(user_info)
+    ```
     """
     user_info = api.get_user(verbose=debug)
     if verbose:
@@ -71,6 +87,14 @@ def get_versions(verbose=False, debug=False) -> dict:
     ## Returns
 
     - `dict` containing version information
+
+    ## Example
+    ```
+    import twinlab as tl
+
+    version_info = tl.get_versions()
+    print(version_info)
+    ```
     """
     version_info = api.get_versions(verbose=debug)
     if verbose:
@@ -85,7 +109,7 @@ def get_versions(verbose=False, debug=False) -> dict:
 
 
 @typechecked
-def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, verbose=False, debug=False, use_url=False) -> None:
+def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, verbose=False, debug=False, use_url=True) -> None:
     """
     # Upload dataset
 
@@ -110,7 +134,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
     import twinlab as tl
 
     data_filepath = "resources/data/my_data.csv"
-    tl.upload_dataset(data_filepath, my_data) # This will be my_data.csv in the cloud
+    tl.upload_dataset(data_filepath, "my_dataset") # This will be my_data.csv in the cloud
     ```
 
     Upload a `pandas` dataframe:
@@ -140,7 +164,6 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
         response = api.process_uploaded_dataset(dataset_id, verbose=debug)
 
     else:
-        # Get the file as a filepath like object
         if type(filepath_or_df) is str:
             filepath = filepath_or_df
             csv_string = open(filepath, "rb").read()
@@ -152,10 +175,11 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str, ve
         else:
             raise ValueError(
                 "filepath_or_df must be a string or pandas dataframe")
-
         response = api.upload_dataset(csv_string, dataset_id, verbose=debug)
-        if verbose:
-            print(response["message"])
+
+    if verbose:
+        message = _get_message(response)
+        print(message)
 
 
 @typechecked
@@ -293,8 +317,8 @@ def delete_dataset(dataset_id: str, verbose=False, debug=False) -> None:
     """
     response = api.delete_dataset(dataset_id, verbose=debug)
     if verbose:
-        print(response["message"])
-        print()
+        message = _get_message(response)
+        print(message, "\n")
 
 ###  ###
 
@@ -325,14 +349,15 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
 
     tl.train_campaign("path/to/params.json", "my_campaign")
     ```
-    import twinlab as tl
 
     Train via a `python` dictionary:
     ```python
+    import twinlab as tl
+
     params = {
-        "dataset": "my_dataset",
-        "inputs": ["X1", "X2"],
-        "outputs": ["y1", "y2"],
+        "dataset_id": "my_dataset",
+        "inputs": ["X"],
+        "outputs": ["y"],
     }
     tl.train_campaign(params, "my_campaign")
     ```
@@ -351,8 +376,8 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
     response = api.train_model(
         params_str, campaign_id, processor="cpu", verbose=debug)
     if verbose:
-        print(response["message"])
-        print()
+        message = _get_message(response)
+        print(message, "\n")
 
     # Wait for job to complete
     complete = False
@@ -419,7 +444,7 @@ def query_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     ## Example
 
     ```python
-    import twinlab_client as tl
+    import twinlab as tl
 
     info = tl.query_campaign("my_campaign")
     print(info)
@@ -484,11 +509,11 @@ def predict_campaign(
 
     Using a local file:
     ```python
-    import twinlab_client as tl
+    import twinlab as tl
 
     filepath = "resources/data/eval.csv" # Local
     campaign_id = "my_campaign" # Pre-trained
-    df_mean, df_std = tl.sample_campaign(file, campaign_id)
+    df_mean, df_std = tl.predict_campaign(file, campaign_id)
     ```
 
     Using a `pandas` dataframe:
@@ -496,7 +521,7 @@ def predict_campaign(
     import pandas as pd
     import twinlab as tl
 
-    df = pd.DataFrame({'X': [1.5, 2.5, 3.5]}
+    df = pd.DataFrame({'X': [1.5, 2.5, 3.5]})
     tl.predict_campaign(df, "my_campaign")
     ```
     """
@@ -549,7 +574,7 @@ def sample_campaign(
 
     Using a local file:
     ```python
-    import twinlab_client as tl
+    import twinlab as tl
 
     filepath = "resources/data/eval.csv" # Local
     campaign_id = "my_campaign" # Pre-trained
@@ -561,8 +586,8 @@ def sample_campaign(
     import pandas as pd
     import twinlab as tl
 
-    df = pd.DataFrame({'X': [1.5, 2.5, 3.5]}
-    tl.predict_campaign(df, "my_campaign")
+    df = pd.DataFrame({'X': [1.5, 2.5, 3.5]})
+    tl.sample_campaign(df, "my_campaign")
     ```
     """
 
@@ -598,7 +623,7 @@ def delete_campaign(campaign_id: str, verbose=False, debug=False) -> None:
     """
     response = api.delete_model(campaign_id, verbose=debug)
     if verbose:
-        print(response["message"])
-        print()
+        message = _get_message(response)
+        print(message, "\n")
 
 ### ###

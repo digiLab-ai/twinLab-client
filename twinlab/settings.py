@@ -7,9 +7,7 @@ from ._version import __version__
 
 class Environment(BaseSettings):
     TWINLAB_SERVER: str
-    TWINLAB_USERNAME: str
-    RAPIDAPI_SUBSCRIPTION: str
-    RAPIDAPI_USER: str
+    TWINLAB_HOST: str
 
     class Config:
         env_prefix = ""
@@ -23,6 +21,6 @@ ENV = Environment()
 print()
 print("         === TwinLab Client Initialisation ===")
 print(f"         Version  : {__version__}")
+print(f"         Host     : {ENV.TWINLAB_HOST}")
 print(f"         Server   : {ENV.TWINLAB_SERVER}")
-print(f"         User     : {ENV.TWINLAB_USERNAME}")
 print()

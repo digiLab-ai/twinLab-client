@@ -43,6 +43,7 @@ pprint(response)
 complete = False  # Wait for job to complete
 while not complete:
     status = api.status_model(model_id, verbose=True)
+    print("Status:", status)
     complete = status["job_complete"]
     time.sleep(1)
 

@@ -3,6 +3,7 @@ import io
 import json
 from typing import Union, Tuple
 from pprint import pprint
+import time
 
 # Third-party imports
 import pandas as pd
@@ -12,6 +13,21 @@ from typeguard import typechecked
 from . import api
 from . import utils
 from .settings import ENV
+
+WAIT_TIME = 1
+
+### Utility functions ###
+
+
+@typechecked
+def _status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
+    response = api.status_model(campaign_id, verbose=debug)
+    if verbose:
+        print(response["message"])
+        print()
+    return response
+
+### ###
 
 ### General functions ###
 
@@ -327,7 +343,7 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
         filepath = filepath_or_params
         params = json.load(open(filepath))
     else:
-        print(type(filepath_or_params))
+        print("Type:", type(filepath_or_params))
         raise ValueError(
             "filepath_or_params must be either a string or a dictionary")
     params = utils.coerce_params_dict(params)
@@ -337,6 +353,13 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str, verbo
     if verbose:
         print(response["message"])
         print()
+
+    # Wait for job to complete
+    complete = False
+    while not complete:
+        status = _status_campaign(campaign_id, verbose=False, debug=debug)
+        complete = status["job_complete"]
+        time.sleep(WAIT_TIME)
 
 
 @typechecked
@@ -372,41 +395,6 @@ def list_campaigns(verbose=False, debug=False) -> list:
         pprint(campaigns, compact=True, sort_dicts=False)
         print()
     return campaigns
-
-
-@typechecked
-def status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
-    """
-    # Status campaign
-
-    Find the status campaign that has begun training
-
-    **NOTE:** Your user information is automatically added to the request using the `.env` file.
-
-    ## Arguments
-
-    - `campaign_id`: `str`; name of trained campaign to delete from the cloud
-    - `verbose`: `bool` determining level of information returned to the user
-    - `debug`: `bool` determining level of information logged on the server
-
-    ## Returns
-
-    - `dict` containg model status including training progress
-
-    ## Example
-
-    ```python
-    import twinlab as tl
-
-    tl.status_campaign("my_campaign")
-    ```
-    """
-    # TODO: Rename view campaign?
-    response = api.status_model(campaign_id, verbose=debug)
-    if verbose:
-        print(response["message"])
-        print()
-    return response
 
 
 @typechecked

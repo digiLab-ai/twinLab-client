@@ -14,7 +14,7 @@ from .client import delete_dataset
 
 # API campaign functions
 from .client import train_campaign
-from .client import status_campaign
+# from .client import status_campaign
 from .client import query_campaign
 from .client import list_campaigns
 from .client import predict_campaign

@@ -7,9 +7,11 @@ import pandas as pd
 
 # Convert these names in the params file
 PARAMS_COERCION = {
-    "test_train_ratio": "train_test_ratio",  # Common mistake
-    "filename": "dataset_id",  # Support old name
-    "filename_std": "dataset_std_id",  # Support old name
+    "test_train_ratio": "train_test_ratio",   # Common mistake
+    "filename": "dataset_id",                 # Support old name
+    "filename_std": "dataset_std_id",         # Support old name
+    "dataset": "dataset_id",                  # Support old name
+    "dataset_std": "dataset_std_id",          # Support old name
     "functional_input": "decompose_inputs",
     "functional_output": "decompose_outputs",
     "function_input": "decompose_inputs",

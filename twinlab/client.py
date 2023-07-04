@@ -200,7 +200,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str,
             raise ValueError(
                 "filepath_or_df must be a string or pandas dataframe")
         if check_dataset:
-            utils.check_dataset(csv_string)
+            utils.check_dataset(csv_string.decode("utf-8"))
         response = api.upload_dataset(csv_string, dataset_id, verbose=debug)
 
     if verbose:

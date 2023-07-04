@@ -93,7 +93,6 @@ def get_user_information(verbose=False, debug=False) -> dict:
     if verbose:
         print("User information:")
         pprint(user_info, compact=True, sort_dicts=False)
-        print()
     return user_info
 
 
@@ -125,7 +124,6 @@ def get_versions(verbose=False, debug=False) -> dict:
     if verbose:
         print("Version information:")
         pprint(version_info, compact=True, sort_dicts=False)
-        print()
     return version_info
 
 ### ###
@@ -239,7 +237,6 @@ def list_datasets(verbose=False, debug=False) -> list:
     if verbose:
         print("Datasets:")
         pprint(datasets, compact=True, sort_dicts=False)
-        print()
     return datasets
 
 
@@ -276,7 +273,6 @@ def view_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     if verbose:
         print("Dataset:")
         print(df)
-        print()
     return df
 
 
@@ -314,7 +310,6 @@ def query_dataset(dataset_id: str, verbose=False, debug=False) -> pd.DataFrame:
     if verbose:
         print("Dataset summary:")
         print(df)
-        print()
     return df
 
 
@@ -449,7 +444,6 @@ def list_campaigns(verbose=False, debug=False) -> list:
     if verbose:
         print("Trained models:")
         pprint(campaigns, compact=True, sort_dicts=False)
-        print()
     return campaigns
 
 
@@ -486,7 +480,6 @@ def query_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     if verbose:
         print("Model summary:")
         pprint(query, compact=True, sort_dicts=False)
-        print()
     return query
 
 
@@ -546,10 +539,8 @@ def predict_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str,
     if verbose:
         print("Mean predictions:")
         print(df_mean)
-        print()
         print("Standard deviation predictions:")
         print(df_std)
-        print()
 
     return df_mean, df_std
 

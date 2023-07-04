@@ -103,7 +103,6 @@ def upload_file_to_presigned_url(file_path: str, url: str, verbose=False, check=
             print(f"File upload failed")
             print(f"Status code: {response.status_code}")
             print(f"Reason: {response.text}")
-        print()
 
 
 def upload_dataframe_to_presigned_url(df: pd.DataFrame, url: str, verbose=False, check=False) -> None:
@@ -129,6 +128,5 @@ def upload_dataframe_to_presigned_url(df: pd.DataFrame, url: str, verbose=False,
             print(f"File upload failed")
             print(f"Status code: {response.status_code}")
             print(f"Reason: {response.text}")
-        print()
 
 ### ###

@@ -98,7 +98,7 @@ def upload_file_to_presigned_url(file_path: str, url: str, verbose=False, check=
         response = requests.put(url, data=file, headers=headers)
     if verbose:
         if response.status_code == 200:
-            print(f"File {file_path} uploaded successfully.")
+            print(f"File {file_path} is uploading.")
         else:
             print(f"File upload failed")
             print(f"Status code: {response.status_code}")
@@ -124,7 +124,7 @@ def upload_dataframe_to_presigned_url(df: pd.DataFrame, url: str, verbose=False,
     response = requests.put(url, data=buffer, headers=headers)
     if verbose:
         if response.status_code == 200:
-            print(f"Dataframe uploaded successfully.")
+            print(f"Dataframe is uploading.")
         else:
             print(f"File upload failed")
             print(f"Status code: {response.status_code}")

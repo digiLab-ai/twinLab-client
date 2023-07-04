@@ -15,12 +15,15 @@ from . import utils
 from .settings import ENV
 
 # Parameters
-WAIT_TIME = 1.  # For polling model [s]
+WAIT_TIME = 1.         # For polling model after job submission [s]
+CHECK_DATASETS = True  # Check datasets are sensible before uploading
+USE_UPLOAD_URL = True  # Upload via a pre-signed url or directly to the server
 
 ### Utility functions ###
 
+# TODO: Move to utils.py?
 
-@typechecked
+
 def _status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     response = api.status_model(campaign_id, verbose=debug)
     if verbose:
@@ -29,9 +32,8 @@ def _status_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
     return response
 
 
-@typechecked
 def _use_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str, method: str,
-                  verbose=False, debug=False, check=False) -> pd.DataFrame:
+                  verbose=False, debug=False) -> pd.DataFrame:
 
     if type(filepath_or_df) is str:
         filepath = filepath_or_df
@@ -41,7 +43,7 @@ def _use_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str, me
         buffer = io.BytesIO()
         df.to_csv(buffer, index=False)
         eval_csv = buffer.getvalue()
-    if check:
+    if CHECK_DATASETS:
         utils.check_dataset(eval_csv.decode("utf-8"))
     output_csv = api.use_model(eval_csv, campaign_id, method=method,
                                processor="cpu", verbose=debug)
@@ -50,6 +52,8 @@ def _use_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str, me
 
 
 def _get_message(response: dict) -> str:
+    # TODO: This could be a method of the response object
+    # TODO: This should be better
     try:
         message = response["message"]
     except:
@@ -131,7 +135,7 @@ def get_versions(verbose=False, debug=False) -> dict:
 
 @typechecked
 def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str,
-                   verbose=False, debug=False, use_url=True, check_dataset=True) -> None:
+                   verbose=False, debug=False) -> None:
     """
     # Upload dataset
 
@@ -145,8 +149,6 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str,
     - `dataset_id`: `str`; name for the dataset when saved to the twinLab cloud
     - `verbose`: `bool` determining level of information returned to the user
     - `debug`: `bool` determining level of information logged on the server
-    - `use_url`: `bool` upload via a pre-signed url or directly to the server
-    - `check`: `bool` check the dataset is sensible before uploading
 
     **NOTE:** Local data must be a CSV file, working data should be a pandas Dataframe. 
     In either case a `dataset_id` must be provided.
@@ -172,19 +174,21 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str,
     """
 
     # Upload the file (either via link or directly)
-    if use_url:
+    if USE_UPLOAD_URL:
         upload_url = api.generate_upload_url(dataset_id, verbose=debug)
         if type(filepath_or_df) is str:
             filepath = filepath_or_df
             utils.upload_file_to_presigned_url(
-                filepath, upload_url, verbose=verbose, check=check_dataset)
+                filepath, upload_url, verbose=verbose, check=CHECK_DATASETS)
         elif type(filepath_or_df) is pd.DataFrame:
             df = filepath_or_df
             utils.upload_dataframe_to_presigned_url(
-                df, upload_url, verbose=verbose, check=check_dataset)
+                df, upload_url, verbose=verbose, check=CHECK_DATASETS)
         else:
             raise ValueError(
                 "filepath_or_df must be a string or pandas dataframe")
+        if verbose:
+            print("Processing dataset.")
         response = api.process_uploaded_dataset(dataset_id, verbose=debug)
 
     else:
@@ -199,7 +203,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str,
         else:
             raise ValueError(
                 "filepath_or_df must be a string or pandas dataframe")
-        if check_dataset:
+        if CHECK_DATASETS:
             utils.check_dataset(csv_string.decode("utf-8"))
         response = api.upload_dataset(csv_string, dataset_id, verbose=debug)
 
@@ -488,7 +492,7 @@ def query_campaign(campaign_id: str, verbose=False, debug=False) -> dict:
 
 @typechecked
 def predict_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str,
-                     verbose=False, debug=False, check_dataset=True) -> Tuple[pd.DataFrame, pd.DataFrame]:
+                     verbose=False, debug=False) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     # Predict campaign
 
@@ -534,7 +538,7 @@ def predict_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str,
     """
 
     df = _use_campaign(filepath_or_df, campaign_id, method="predict",
-                       verbose=verbose, debug=debug, check=check_dataset)
+                       verbose=verbose, debug=debug)
 
     n = len(df.columns)
     df_mean, df_std = df.iloc[:, :n//2], df.iloc[:, n//2:]
@@ -552,7 +556,7 @@ def predict_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str,
 
 @typechecked
 def sample_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str,
-                    verbose=False, debug=False, check_dataset=True) -> Tuple[pd.DataFrame, pd.DataFrame]:
+                    verbose=False, debug=False) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     # Sample campaign
 
@@ -598,7 +602,7 @@ def sample_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str,
     """
 
     df_samples = _use_campaign(filepath_or_df, campaign_id, method="sample",
-                               verbose=verbose, debug=debug, check=check_dataset)
+                               verbose=verbose, debug=debug)
     # TODO: Munge to get the format correct
     return df_samples
 

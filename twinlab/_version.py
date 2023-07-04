@@ -1,5 +1,6 @@
 # Standard imports
-import pkg_resources
+import importlib.metadata
 
 # Get the version number
-__version__ = pkg_resources.get_distribution('twinlab').version
+# NOTE: poetry install required to bump version
+__version__ = importlib.metadata.version("twinlab")

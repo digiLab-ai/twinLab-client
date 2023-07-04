@@ -1,6 +1,0 @@
-{
-    "filename": "basic.csv",
-    "inputs": ["x"],
-    "outputs": ["y"],
-    "test_train_split": 10
-}

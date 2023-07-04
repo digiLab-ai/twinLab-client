@@ -44,7 +44,7 @@ def check_dataset(string: str) -> None:
     Check that a sensible dataframe can be created from a CSV string.
     """
 
-    # # Check that dataset is a valid CSV.
+    # Can we parse the string into a dataframe?
     try:
         string_io = io.StringIO(string)
         df = pd.read_csv(string_io)
@@ -75,10 +75,6 @@ def check_dataset(string: str) -> None:
     # Warning if the dataset contains infinite values.
     if not np.isfinite(df).all().all():
         raise Warning("Dataset contains infinite values.")
-
-    # Check that dataset has no duplicated rows.
-    if df.duplicated().any():
-        raise Warning("Dataset contains duplicated rows.")
 
 ### ###
 

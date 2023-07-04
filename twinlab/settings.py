@@ -3,6 +3,7 @@ from pydantic import BaseSettings
 
 # Project imports
 from ._version import __version__
+from . import api
 
 
 class Environment(BaseSettings):
@@ -18,9 +19,12 @@ class Environment(BaseSettings):
 
 ENV = Environment()
 
+twinlab_user = api.get_user()["username"]
+
 print()
 print("         === TwinLab Client Initialisation ===")
 print(f"         Version  : {__version__}")
+print(f"         User     : {twinlab_user}")
 print(f"         Host     : {ENV.TWINLAB_HOST}")
 print(f"         Server   : {ENV.TWINLAB_SERVER}")
 print()

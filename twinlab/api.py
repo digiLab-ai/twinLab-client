@@ -1,12 +1,12 @@
 from typing import Optional
 import os
 import json
-
 from dotenv import load_dotenv
+
 import requests
 
 # Load environment variables
-load_dotenv()
+load_dotenv(override=True)  # NOTE: Override seems to be necessary
 TWINLAB_SERVER: str = os.getenv("TWINLAB_SERVER")
 if not TWINLAB_SERVER:
     raise ValueError("TWINLAB_SERVER not set in .env")

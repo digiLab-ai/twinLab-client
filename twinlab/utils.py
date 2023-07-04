@@ -3,6 +3,7 @@ import io
 
 # Third-party imports
 import requests
+import numpy as np
 import pandas as pd
 
 # Convert these names in the params file
@@ -17,6 +18,7 @@ PARAMS_COERCION = {
     "function_input": "decompose_inputs",
     "function_output": "decompose_outputs",
 }
+DEFAULT_TRAIN_TEST_RATIO = 1.  # Default to use all data for training
 
 
 ### Utility functions ###
@@ -26,18 +28,64 @@ def coerce_params_dict(params: dict) -> dict:
     """
     Relabel parameters to be consistent with twinLab library
     """
+    if "train_test_split" in params.keys() or "test_train_split" in params.keys():
+        raise TypeError(
+            "train_test_split is deprecated. Use train_test_ratio instead.")
     for param in PARAMS_COERCION:
         if param in params:
             params[PARAMS_COERCION[param]] = params.pop(param)
+    if "train_test_ratio" not in params.keys():
+        params["train_test_ratio"] = DEFAULT_TRAIN_TEST_RATIO
     return params
 
+
+def check_dataset(string: str) -> None:
+    """
+    Check that a sensible dataframe can be created from a CSV string.
+    """
+
+    # # Check that dataset is a valid CSV.
+    try:
+        string_io = io.StringIO(string)
+        df = pd.read_csv(string_io)
+    except Exception:
+        raise TypeError("Could not parse the input into a dataframe.")
+
+    # Check that dataset has at least one column.
+    if df.shape[0] < 1:
+        raise TypeError("Dataset must have at least one column.")
+
+    # Check that dataset has no duplicate column names.
+    # TODO: Is this needed? What if the columns with identical names are not used in training?
+    if len(set(df.columns)) != len(df.columns):
+        raise TypeError("Dataset must contain no duplicate column names.")
+
+    # Check that dataset has at least one row.
+    if df.shape[1] < 1:
+        raise TypeError("Dataset must have at least one row.")
+
+    # Check that the dataset contains only numerical values.
+    if not df.applymap(lambda x: isinstance(x, (int, float))).all().all():
+        raise Warning("Dataset contains non-numerical values.")
+
+    # Warning if the dataset contains missing values.
+    if df.isnull().values.any():
+        raise Warning("Dataset contains missing values.")
+
+    # Warning if the dataset contains infinite values.
+    if not np.isfinite(df).all().all():
+        raise Warning("Dataset contains infinite values.")
+
+    # Check that dataset has no duplicated rows.
+    if df.duplicated().any():
+        raise Warning("Dataset contains duplicated rows.")
 
 ### ###
 
 ### HTTP requests ###
 
 
-def upload_file_to_presigned_url(file_path: str, url: str, verbose=False) -> None:
+def upload_file_to_presigned_url(file_path: str, url: str, verbose=False, check=False) -> None:
     """
     Upload a file to the specified pre-signed URL.
     params:
@@ -45,7 +93,10 @@ def upload_file_to_presigned_url(file_path: str, url: str, verbose=False) -> Non
         presigned_url: The pre-signed URL generated for uploading the file.
         verbose: bool
     """
-
+    if check:
+        with open(file_path, "rb") as file:
+            csv_string = file.read().decode("utf-8")
+            check_dataset(csv_string)
     with open(file_path, "rb") as file:
         headers = {"Content-Type": "application/octet-stream"}
         response = requests.put(url, data=file, headers=headers)
@@ -59,7 +110,7 @@ def upload_file_to_presigned_url(file_path: str, url: str, verbose=False) -> Non
         print()
 
 
-def upload_dataframe_to_presigned_url(df: pd.DataFrame, url: str, verbose=False) -> None:
+def upload_dataframe_to_presigned_url(df: pd.DataFrame, url: str, verbose=False, check=False) -> None:
     """
     Upload a panads dataframe to the specified pre-signed URL.
     params:
@@ -67,6 +118,9 @@ def upload_dataframe_to_presigned_url(df: pd.DataFrame, url: str, verbose=False)
         url: The pre-signed URL generated for uploading the file.
         verbose: bool
     """
+    if check:
+        csv_string = df.to_csv(index=False)
+        check_dataset(csv_string)
     headers = {"Content-Type": "application/octet-stream"}
     buffer = io.BytesIO()
     df.to_csv(buffer, index=False)

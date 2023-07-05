@@ -6,20 +6,8 @@ import requests
 import numpy as np
 import pandas as pd
 
-# Convert these names in the params file
-PARAMS_COERCION = {
-    "test_train_ratio": "train_test_ratio",   # Common mistake
-    "filename": "dataset_id",                 # Support old name
-    "filename_std": "dataset_std_id",         # Support old name
-    "dataset": "dataset_id",                  # Support old name
-    "dataset_std": "dataset_std_id",          # Support old name
-    "functional_input": "decompose_inputs",
-    "functional_output": "decompose_outputs",
-    "function_input": "decompose_inputs",
-    "function_output": "decompose_outputs",
-}
-DEFAULT_TRAIN_TEST_RATIO = 1.  # Default to use all data for training
-
+# Project imports
+from . import settings
 
 ### Utility functions ###
 
@@ -31,11 +19,11 @@ def coerce_params_dict(params: dict) -> dict:
     if "train_test_split" in params.keys() or "test_train_split" in params.keys():
         raise TypeError(
             "train_test_split is deprecated. Use train_test_ratio instead.")
-    for param in PARAMS_COERCION:
+    for param in settings.PARAMS_COERCION:
         if param in params:
-            params[PARAMS_COERCION[param]] = params.pop(param)
+            params[settings.PARAMS_COERCION[param]] = params.pop(param)
     if "train_test_ratio" not in params.keys():
-        params["train_test_ratio"] = DEFAULT_TRAIN_TEST_RATIO
+        params["train_test_ratio"] = settings.DEFAULT_TRAIN_TEST_RATIO
     return params
 
 

@@ -12,12 +12,9 @@ from typeguard import typechecked
 # Project imports
 from . import api
 from . import utils
-from .settings import ENV
+from . import settings
 
-# Parameters
-WAIT_TIME = 1.         # For polling model after job submission [s]
-CHECK_DATASETS = True  # Check datasets are sensible before uploading
-USE_UPLOAD_URL = True  # Upload via a pre-signed url or directly to the server
+
 
 ### Utility functions ###
 
@@ -43,7 +40,7 @@ def _use_campaign(filepath_or_df: Union[str, pd.DataFrame], campaign_id: str, me
         buffer = io.BytesIO()
         df.to_csv(buffer, index=False)
         eval_csv = buffer.getvalue()
-    if CHECK_DATASETS:
+    if settings.CHECK_DATASETS:
         utils.check_dataset(eval_csv.decode("utf-8"))
     output_csv = api.use_model(eval_csv, campaign_id, method=method,
                                processor="cpu", verbose=debug)
@@ -172,16 +169,16 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str,
     """
 
     # Upload the file (either via link or directly)
-    if USE_UPLOAD_URL:
+    if settings.USE_UPLOAD_URL:
         upload_url = api.generate_upload_url(dataset_id, verbose=debug)
         if type(filepath_or_df) is str:
             filepath = filepath_or_df
             utils.upload_file_to_presigned_url(
-                filepath, upload_url, verbose=verbose, check=CHECK_DATASETS)
+                filepath, upload_url, verbose=verbose, check=settings.CHECK_DATASETS)
         elif type(filepath_or_df) is pd.DataFrame:
             df = filepath_or_df
             utils.upload_dataframe_to_presigned_url(
-                df, upload_url, verbose=verbose, check=CHECK_DATASETS)
+                df, upload_url, verbose=verbose, check=settings.CHECK_DATASETS)
         else:
             raise ValueError(
                 "filepath_or_df must be a string or pandas dataframe")
@@ -201,7 +198,7 @@ def upload_dataset(filepath_or_df: Union[str, pd.DataFrame], dataset_id: str,
         else:
             raise ValueError(
                 "filepath_or_df must be a string or pandas dataframe")
-        if CHECK_DATASETS:
+        if settings.CHECK_DATASETS:
             utils.check_dataset(csv_string.decode("utf-8"))
         response = api.upload_dataset(csv_string, dataset_id, verbose=debug)
 
@@ -410,7 +407,7 @@ def train_campaign(filepath_or_params: Union[str, dict], campaign_id: str,
     while not complete:
         status = _status_campaign(campaign_id, verbose=False, debug=debug)
         complete = status["job_complete"]
-        time.sleep(WAIT_TIME)
+        time.sleep(settings.WAIT_TIME)
 
 
 @typechecked
